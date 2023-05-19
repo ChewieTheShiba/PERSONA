@@ -22,6 +22,7 @@ public class PersonaPanel extends JPanel
 	private int w, h;
 	private Timer timer;
 	private Room[][] map;
+	private ArrayList<Room> loaded;
 	private JPanel panel;
 	private Player player;
 
@@ -33,6 +34,7 @@ public class PersonaPanel extends JPanel
 		this.setPreferredSize(new Dimension(w, h));
 		map = new Room[10][10];
 		loadMap();
+		loaded = new ArrayList<Room>();
 		timer = new Timer(20, new ActionListen());
 		timer.start();
 		panel = new JPanel();
@@ -105,7 +107,16 @@ public class PersonaPanel extends JPanel
 			switch(e.getKeyCode()) 
 			{
 				case KeyEvent.VK_D:
-					player.setX(player.getX()+10);
+					player.setWalkingRight(true);
+					break;
+				case KeyEvent.VK_A:
+					player.setWalkingLeft(true);
+					break;
+				case KeyEvent.VK_W:
+					player.setWalkingUp(true);
+					break;
+				case KeyEvent.VK_S:
+					player.setWalkingDown(true);
 					break;
 			}
 			
@@ -113,7 +124,21 @@ public class PersonaPanel extends JPanel
 
 		public void keyReleased(KeyEvent e)
 		{
-			// TODO Auto-generated method stub
+			switch(e.getKeyCode()) 
+			{
+				case KeyEvent.VK_D:
+					player.setWalkingRight(false);
+					break;
+				case KeyEvent.VK_A:
+					player.setWalkingLeft(false);
+					break;
+				case KeyEvent.VK_W:
+					player.setWalkingUp(false);
+					break;
+				case KeyEvent.VK_S:
+					player.setWalkingDown(false);
+					break;
+			}
 			
 		}
 		
@@ -137,8 +162,40 @@ public class PersonaPanel extends JPanel
 	
 	public void update()
 	{
-		System.out.println(player.getX());
 		repaint();
+		//updateMap();
+		updatePlayer();
+	}
+	
+	/*public void updateMap()
+	{
+		for(Room t[] : map)
+		{
+			for(Room r : t)
+			{
+				
+			}
+		}
+	}*/
+	
+	public void updatePlayer()
+	{
+		if(player.isWalkingRight())
+		{
+			player.setX(player.getX()+10);
+		}
+		if(player.isWalkingLeft())
+		{
+			player.setX(player.getX()-10);
+		}
+		if(player.isWalkingUp())
+		{
+			player.setY(player.getY()-10);
+		}
+		if(player.isWalkingDown())
+		{
+			player.setY(player.getY()+10);
+		}
 	}
 
 

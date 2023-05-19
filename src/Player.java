@@ -29,6 +29,22 @@ public class Player
 	
 	public void drawPlayer(JPanel panel, Graphics2D g)
 	{
+		if(walkingRight)
+			sprite = new ImageIcon("assets/player/walkRight.gif");
+		else if(walkingLeft)
+			sprite = new ImageIcon("assets/player/walkLeft.gif");
+		else if(walkingDown)
+			sprite = new ImageIcon("assets/player/walkDown.gif");
+		else if(walkingUp)
+			sprite = new ImageIcon("assets/player/walkUp.gif");
+		else if(faceRight)
+			sprite = new ImageIcon("assets/player/faceRight.png");
+		else if(faceLeft)
+			sprite = new ImageIcon("assets/player/faceLeft.png");
+		else if(faceUp)
+			sprite = new ImageIcon("assets/player/faceUp.png");
+		else if(faceDown)
+			sprite = new ImageIcon("assets/player/faceDown.png");
 		sprite.paintIcon(panel, g, 960, 540);
 	}
 
@@ -110,6 +126,14 @@ public class Player
 	public void setWalkingUp(boolean walkingUp)
 	{
 		this.walkingUp = walkingUp;
+		if(walkingUp)
+		{
+			faceUp = true;
+			faceRight = false;
+			faceLeft = false;
+			faceDown = false;
+		}
+			
 	}
 
 	public boolean isWalkingDown()
@@ -120,6 +144,13 @@ public class Player
 	public void setWalkingDown(boolean walkingDown)
 	{
 		this.walkingDown = walkingDown;
+		if(walkingDown)
+		{
+			faceUp = false;
+			faceRight = false;
+			faceLeft = false;
+			faceDown = true;
+		}
 	}
 
 	public boolean isWalkingLeft()
@@ -130,6 +161,13 @@ public class Player
 	public void setWalkingLeft(boolean walkingLeft)
 	{
 		this.walkingLeft = walkingLeft;
+		if(walkingLeft)
+		{
+			faceUp = false;
+			faceRight = false;
+			faceLeft = true;
+			faceDown = false;
+		}
 	}
 
 	public boolean isWalkingRight()
@@ -140,6 +178,13 @@ public class Player
 	public void setWalkingRight(boolean walkingRight)
 	{
 		this.walkingRight = walkingRight;
+		if(walkingRight)
+		{
+			faceUp = false;
+			faceRight = true;
+			faceLeft = false;
+			faceDown = false;
+		}
 	}
 	
 	
