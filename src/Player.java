@@ -19,11 +19,13 @@ public class Player
 	private int x, y;
 	private ImageIcon sprite;
 	private boolean faceRight, faceLeft, faceUp, faceDown, walkingUp, walkingDown, walkingLeft, walkingRight;
+	private Rectangle hitbox;
 	
 	public Player(int x, int y)
 	{
 		this.x = x;
 		this.y = y;
+		this.hitbox = new Rectangle(x, y, 28, 54);
 		sprite = new ImageIcon("assets/player/faceRight.png");
 	}
 	

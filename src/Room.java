@@ -15,13 +15,21 @@ import java.io.*;
 public class Room
 {
 	private Block[][] room;
-	private int x, y;
+	private int x, y, tLeftx, tLefty, tRightx, tRighty, bLeftx, bLefty, bRightx, bRighty;
 	
 	public Room(int x, int y)
 	{
 		room = new Block[25][25];
 		this.x = x;
 		this.y = y;
+		tLeftx = x;
+		tLefty = y;
+		tRightx = x+800;
+		tRighty = y;
+		bLeftx = x;
+		bLefty = y+800;
+		bRightx = x+800;
+		bRighty = y+800;
 	}
 	
 	public Room loadRoom(String file)
@@ -91,5 +99,118 @@ public class Room
 			}
 		}
 	}
+
+	public Block[][] getRoom()
+	{
+		return room;
+	}
+
+	public void setRoom(Block[][] room)
+	{
+		this.room = room;
+	}
+
+	public int getX()
+	{
+		return x;
+	}
+
+	public void setX(int x)
+	{
+		this.x = x;
+	}
+
+	public int getY()
+	{
+		return y;
+	}
+
+	public void setY(int y)
+	{
+		this.y = y;
+	}
+
+	public int gettLeftx()
+	{
+		return tLeftx;
+	}
+
+	public void settLeftx(int tLeftx)
+	{
+		this.tLeftx = tLeftx;
+	}
+
+	public int gettLefty()
+	{
+		return tLefty;
+	}
+
+	public void settLefty(int tLefty)
+	{
+		this.tLefty = tLefty;
+	}
+
+	public int gettRightx()
+	{
+		return tRightx;
+	}
+
+	public void settRightx(int tRightx)
+	{
+		this.tRightx = tRightx;
+	}
+
+	public int gettRighty()
+	{
+		return tRighty;
+	}
+
+	public void settRighty(int tRighty)
+	{
+		this.tRighty = tRighty;
+	}
+
+	public int getbLeftx()
+	{
+		return bLeftx;
+	}
+
+	public void setbLeftx(int bLeftx)
+	{
+		this.bLeftx = bLeftx;
+	}
+
+	public int getbLefty()
+	{
+		return bLefty;
+	}
+
+	public void setbLefty(int bLefty)
+	{
+		this.bLefty = bLefty;
+	}
+
+	public int getbRightx()
+	{
+		return bRightx;
+	}
+
+	public void setbRightx(int bRightx)
+	{
+		this.bRightx = bRightx;
+	}
+
+	public int getbRighty()
+	{
+		return bRighty;
+	}
+
+	public void setbRighty(int bRighty)
+	{
+		this.bRighty = bRighty;
+	}
+
+	
+	
 	
 }

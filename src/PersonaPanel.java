@@ -22,10 +22,10 @@ public class PersonaPanel extends JPanel
 	private int w, h;
 	private Timer timer;
 	private Room[][] map;
-	private ArrayList<Room> loaded;
+	private ArrayList<Room> loadedRooms;
 	private JPanel panel;
 	private Player player;
-
+	
 	// sets up the initial panel for drawing with proper size
 	public PersonaPanel(int w, int h)
 	{
@@ -34,7 +34,7 @@ public class PersonaPanel extends JPanel
 		this.setPreferredSize(new Dimension(w, h));
 		map = new Room[10][10];
 		loadMap();
-		loaded = new ArrayList<Room>();
+		loadedRooms = new ArrayList<Room>();
 		timer = new Timer(20, new ActionListen());
 		timer.start();
 		panel = new JPanel();
@@ -53,12 +53,9 @@ public class PersonaPanel extends JPanel
 		Graphics2D g = (Graphics2D) tg;
 
 		// all drawings below here:
-		for(Room[] t : map)
+		for(Room r : loadedRooms)
 		{
-			for(Room r : t)
-			{
-				r.drawRoom(panel, g, player);
-			}
+			r.drawRoom(panel, g, player);
 		}
 		player.drawPlayer(panel, g);
 		
@@ -163,23 +160,39 @@ public class PersonaPanel extends JPanel
 	public void update()
 	{
 		repaint();
-		//updateMap();
+		updateMap();
 		updatePlayer();
 	}
 	
-	/*public void updateMap()
+	public void updateMap()
 	{
+		loadedRooms.clear();
 		for(Room t[] : map)
 		{
 			for(Room r : t)
 			{
-				
+				if((Math.abs(player.getX()-r.gettLeftx()) <= 960 && Math.abs(player.getY()-r.gettLefty()) <= 540) || (Math.abs(player.getX()-r.getbLeftx()) <= 960 && Math.abs(player.getY()-r.getbLefty()) <= 540) || (Math.abs(player.getX()-r.gettRightx()) <= 960 && Math.abs(player.getY()-r.gettRighty()) <= 540) || (Math.abs(player.getX()-r.getbRightx()) <= 960 && Math.abs(player.getY()-r.getbRighty()) <= 540))
+					loadedRooms.add(r);
 			}
 		}
-	}*/
+		System.out.println(loadedRooms);
+	}
 	
 	public void updatePlayer()
 	{
+		boolean canGoRight = true, canGoLeft = true, canGoUp = true, canGoDown = true;
+		for(Room r : loadedRooms)
+		{
+			for(Block t[] : r.getRoom())
+			{
+				for(Block b : t)
+				{
+					//MIGHT BE A BETTER WAY TO DO THIS BUT TRYING TO DETECT IF THEY HIT A BLOCK LIKE THIS AND
+					//IF ITS LAGGY ILL OPTIMIZE TO LOADING BLOCKS INSTEAD OF ROOMS OR LOADING ROOM PLAYER IS IN
+				}
+			}
+		}
+		
 		if(player.isWalkingRight())
 		{
 			player.setX(player.getX()+10);
