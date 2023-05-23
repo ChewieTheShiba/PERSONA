@@ -25,12 +25,14 @@ public class PersonaPanel extends JPanel
 	private ArrayList<Room> loadedRooms;
 	private JPanel panel;
 	private Player player;
+	private ImageIcon bg;
 	
 	// sets up the initial panel for drawing with proper size
 	public PersonaPanel(int w, int h)
 	{
 		this.w = w;
 		this.h = h;
+		bg = new ImageIcon("assets/bg.gif");
 		this.setPreferredSize(new Dimension(w, h));
 		map = new Room[10][10];
 		loadMap();
@@ -51,6 +53,14 @@ public class PersonaPanel extends JPanel
 		// this line sets up the graphics - always needed
 		super.paintComponent(tg);
 		Graphics2D g = (Graphics2D) tg;
+		
+		for(int y = 0; y < 8000; y += 280)
+		{
+			for(int x = 0; x < 8000; x += 498)
+			{
+				bg.paintIcon(panel, g, x, y);
+			}
+		}
 
 		// all drawings below here:
 		for(Room r : loadedRooms)
@@ -175,7 +185,6 @@ public class PersonaPanel extends JPanel
 					loadedRooms.add(r);
 			}
 		}
-		System.out.println(loadedRooms);
 	}
 	
 	public void updatePlayer()
@@ -189,23 +198,37 @@ public class PersonaPanel extends JPanel
 				{
 					//MIGHT BE A BETTER WAY TO DO THIS BUT TRYING TO DETECT IF THEY HIT A BLOCK LIKE THIS AND
 					//IF ITS LAGGY ILL OPTIMIZE TO LOADING BLOCKS INSTEAD OF ROOMS OR LOADING ROOM PLAYER IS IN
+					if(b.isWall())
+					{
+						if(b.getHitbox().intersects(player.getX()+10, player.getY(), 28, 54))
+							canGoRight = false;
+						if(b.getHitbox().intersects(player.getX()-10, player.getY(), 28, 54))
+							canGoLeft = false;
+						if(b.getHitbox().intersects(player.getX(), player.getY()+10, 28, 54))
+							canGoDown = false;
+						if(b.getHitbox().intersects(player.getX(), player.getY()-10, 28, 54))
+							canGoUp = false;
+							
+					}
 				}
 			}
 		}
 		
-		if(player.isWalkingRight())
+		System.out.println("\n" + canGoRight + "\n" + canGoLeft + "\n" + canGoUp + "\n" + canGoDown);
+		
+		if(player.isWalkingRight() && canGoRight)
 		{
 			player.setX(player.getX()+10);
 		}
-		if(player.isWalkingLeft())
+		if(player.isWalkingLeft() && canGoLeft)
 		{
 			player.setX(player.getX()-10);
 		}
-		if(player.isWalkingUp())
+		if(player.isWalkingUp() && canGoUp)
 		{
 			player.setY(player.getY()-10);
 		}
-		if(player.isWalkingDown())
+		if(player.isWalkingDown() && canGoDown)
 		{
 			player.setY(player.getY()+10);
 		}
