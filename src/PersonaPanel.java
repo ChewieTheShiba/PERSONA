@@ -214,7 +214,7 @@ public class PersonaPanel extends JPanel
 			}
 		}
 		
-		System.out.println("\n" + canGoRight + "\n" + canGoLeft + "\n" + canGoUp + "\n" + canGoDown);
+		//System.out.println("\n" + canGoRight + "\n" + canGoLeft + "\n" + canGoUp + "\n" + canGoDown);
 		
 		if(player.isWalkingRight() && canGoRight)
 		{

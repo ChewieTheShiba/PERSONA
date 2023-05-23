@@ -11,7 +11,7 @@ import java.io.*;
 
 public class Shadow
 {
-	private ImageIcon masterSprite;
+	private ImageIcon masterSprite, sprite;
 	private int x, y;
 	private Rectangle hitbox;
 	private boolean walkingUp, walkingDown, walkingLeft, walkingRight;
@@ -21,6 +21,7 @@ public class Shadow
 		this.masterSprite = sprite;
 		this.x = x;
 		this.y = y;
+		this.sprite = sprite;
 		hitbox = new Rectangle(x, y, width, height);
 	}
 
@@ -82,7 +83,7 @@ public class Shadow
 							walkingUp = false;
 						else if(!b.getHitbox().intersects(x-10, y, hitbox.width, hitbox.height))
 							walkingLeft = false;
-						if(!b.getHitbox().intersects(x, y+10, hitbox.width, hitbox.height))
+						else if(!b.getHitbox().intersects(x, y+10, hitbox.width, hitbox.height))
 							walkingDown = false;
 							
 					}
@@ -90,7 +91,7 @@ public class Shadow
 			}
 		}
 		
-		String spriteString = sprite.toString();
+		String spriteString = masterSprite.toString();
 		
 		if(walkingRight)
 		{
@@ -104,12 +105,10 @@ public class Shadow
 		}
 		if(walkingUp)
 		{
-			sprite = new ImageIcon(spriteString.substring(0, spriteString.indexOf(';')) + ";Up.png");
 			y -= 10;
 		}
 		if(walkingDown)
 		{
-			sprite = new ImageIcon(spriteString.substring(0, spriteString.indexOf(';')) + ";Down.png");
 			y += 10;
 		}
 	}
