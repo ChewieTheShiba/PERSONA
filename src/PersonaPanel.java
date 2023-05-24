@@ -26,6 +26,8 @@ public class PersonaPanel extends JPanel
 	private JPanel panel;
 	private Player player;
 	private ImageIcon bg;
+	private final Shadow SLIME;
+	private ArrayList<Shadow> shadows;
 	
 	// sets up the initial panel for drawing with proper size
 	public PersonaPanel(int w, int h)
@@ -41,6 +43,12 @@ public class PersonaPanel extends JPanel
 		timer.start();
 		panel = new JPanel();
 		player = new Player(w/2, h/2);
+		SLIME = new Shadow(new ImageIcon("assets/shadows/Slime;Right.png"), 1000, 500, 50, 33, new int[]{10, 11, 12, 13}, new String[]{"slime", "slime2", "slime3", "slime4"}, new String[]{"Phys", "Phys", "Phys", "Phys"});
+		shadows = new ArrayList<Shadow>();
+		shadows.add(SLIME.copy());
+		shadows.add(SLIME.copy());
+		shadows.add(SLIME.copy());
+		
 		this.add(panel);
 		this.addKeyListener(new KeyListen());
 		this.setFocusable(true);
@@ -64,9 +72,11 @@ public class PersonaPanel extends JPanel
 
 		// all drawings below here:
 		for(Room r : loadedRooms)
-		{
 			r.drawRoom(panel, g, player);
-		}
+		
+		for(Shadow s : shadows)
+			s.paintShadow(panel, g, player);
+		
 		player.drawPlayer(panel, g);
 		
 	}
@@ -171,6 +181,7 @@ public class PersonaPanel extends JPanel
 	{
 		repaint();
 		updateMap();
+		updateShadows();
 		updatePlayer();
 	}
 	
@@ -185,6 +196,12 @@ public class PersonaPanel extends JPanel
 					loadedRooms.add(r);
 			}
 		}
+	}
+	
+	public void updateShadows()
+	{
+		for(Shadow s : shadows)
+			s.move(loadedRooms);
 	}
 	
 	public void updatePlayer()

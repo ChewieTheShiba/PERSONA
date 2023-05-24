@@ -16,7 +16,7 @@ import java.io.*;
 
 public class Player
 {
-	private int x, y;
+	private int x, y, hp, sp;
 	private ImageIcon sprite;
 	private boolean faceRight, faceLeft, faceUp, faceDown, walkingUp, walkingDown, walkingLeft, walkingRight;
 	private Rectangle hitbox;
@@ -24,6 +24,8 @@ public class Player
 	public Player(int x, int y)
 	{
 		this.x = x;
+		hp = 100;
+		sp = 50;
 		this.y = y;
 		this.hitbox = new Rectangle(x, y, 28, 54);
 		sprite = new ImageIcon("assets/player/faceRight.png");
@@ -187,6 +189,54 @@ public class Player
 			faceLeft = false;
 			faceDown = false;
 		}
+	}
+
+	public int getHp()
+	{
+		return hp;
+	}
+
+	public void setHp(int hp)
+	{
+		this.hp = hp;
+	}
+
+	public int getSp()
+	{
+		return sp;
+	}
+
+	public void setSp(int sp)
+	{
+		this.sp = sp;
+	}
+
+	public Rectangle getHitbox()
+	{
+		return hitbox;
+	}
+
+	public void setHitbox(Rectangle hitbox)
+	{
+		this.hitbox = hitbox;
+	}
+	
+	public String getType()
+	{
+		return "hi";
+	}
+	
+	public int isEffective(String aType, String dType)
+	{
+		return 0;
+	}
+	
+	public void battle(Shadow enemy)
+	{
+		//paint stuff
+		//select persona, attack, or shield
+		//check if its shadows turn
+		
 	}
 	
 	
