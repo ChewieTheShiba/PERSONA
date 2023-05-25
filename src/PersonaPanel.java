@@ -43,7 +43,7 @@ public class PersonaPanel extends JPanel
 		timer.start();
 		panel = new JPanel();
 		player = new Player(w/2, h/2);
-		SLIME = new Shadow(new ImageIcon("assets/shadows/Slime;Right.png"), 1000, 500, 50, 33, new int[]{10, 11, 12, 13}, new String[]{"slime", "slime2", "slime3", "slime4"}, new String[]{"Phys", "Phys", "Phys", "Phys"});
+		SLIME = new Shadow(new ImageIcon("assets/shadows/Slime;Right.png"), 1000, 500, 50, 33, new int[]{10, 11, 12, 13}, new String[]{"slime", "slime2", "slime3", "slime4"}, new String[]{"Phys", "Phys", "Phys", "Phys"}, 100);
 		shadows = new ArrayList<Shadow>();
 		loadShadows();
 		
@@ -58,7 +58,7 @@ public class PersonaPanel extends JPanel
 	{
 		// this line sets up the graphics - always needed
 		super.paintComponent(tg);
-		Graphics2D g = (Graphics2D) tg;
+		g = (Graphics2D) tg;
 		
 		for(int y = 0; y < 8000; y += 280)
 		{
@@ -67,6 +67,8 @@ public class PersonaPanel extends JPanel
 				bg.paintIcon(panel, g, x, y);
 			}
 		}
+		
+		player.battle(SLIME, panel, g);
 
 		// all drawings below here:
 		for(Room r : loadedRooms)
@@ -281,6 +283,8 @@ public class PersonaPanel extends JPanel
 			player.setY(player.getY()+10);
 		}
 	}
+	
+	
 
 
 }

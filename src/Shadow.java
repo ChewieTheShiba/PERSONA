@@ -12,13 +12,13 @@ import java.io.*;
 public class Shadow
 {
 	private ImageIcon masterSprite, sprite;
-	private int x, y;
+	private int x, y, hp;
 	private Rectangle hitbox;
 	private boolean walkingUp, walkingDown, walkingLeft, walkingRight;
 	private int[] attackPows;
 	private String[] attackNames, attackTypes;
 
-	public Shadow(ImageIcon sprite, int x, int y, int width, int height, int[] attackPows, String[] attackNames, String[] attackTypes)
+	public Shadow(ImageIcon sprite, int x, int y, int width, int height, int[] attackPows, String[] attackNames, String[] attackTypes, int hp)
 	{
 		this.masterSprite = sprite;
 		this.attackPows = attackPows;
@@ -28,6 +28,7 @@ public class Shadow
 		this.walkingLeft = false;
 		this.walkingUp = false;
 		this.walkingDown = false;
+		this.hp = hp;
 		this.x = x;
 		this.y = y;
 		this.sprite = sprite;
@@ -52,7 +53,7 @@ public class Shadow
 	
 	public Shadow copy(int x, int y)
 	{
-		Shadow s = new Shadow(sprite, x, y, hitbox.width, hitbox.height, attackPows, attackNames, attackTypes);
+		Shadow s = new Shadow(sprite, x, y, hitbox.width, hitbox.height, attackPows, attackNames, attackTypes, hp);
 		return s;
 	}
 
@@ -208,5 +209,80 @@ public class Shadow
 	{
 		sprite.paintIcon(panel, g, x-player.getX()+960, y-player.getY()+540);
 	}
+
+	public ImageIcon getMasterSprite() {
+		return masterSprite;
+	}
+
+	public void setMasterSprite(ImageIcon masterSprite) {
+		this.masterSprite = masterSprite;
+	}
+
+	public int getHp() {
+		return hp;
+	}
+
+	public void setHp(int hp) {
+		this.hp = hp;
+	}
+
+	public boolean isWalkingUp() {
+		return walkingUp;
+	}
+
+	public void setWalkingUp(boolean walkingUp) {
+		this.walkingUp = walkingUp;
+	}
+
+	public boolean isWalkingDown() {
+		return walkingDown;
+	}
+
+	public void setWalkingDown(boolean walkingDown) {
+		this.walkingDown = walkingDown;
+	}
+
+	public boolean isWalkingLeft() {
+		return walkingLeft;
+	}
+
+	public void setWalkingLeft(boolean walkingLeft) {
+		this.walkingLeft = walkingLeft;
+	}
+
+	public boolean isWalkingRight() {
+		return walkingRight;
+	}
+
+	public void setWalkingRight(boolean walkingRight) {
+		this.walkingRight = walkingRight;
+	}
+
+	public int[] getAttackPows() {
+		return attackPows;
+	}
+
+	public void setAttackPows(int[] attackPows) {
+		this.attackPows = attackPows;
+	}
+
+	public String[] getAttackNames() {
+		return attackNames;
+	}
+
+	public void setAttackNames(String[] attackNames) {
+		this.attackNames = attackNames;
+	}
+
+	public String[] getAttackTypes() {
+		return attackTypes;
+	}
+
+	public void setAttackTypes(String[] attackTypes) {
+		this.attackTypes = attackTypes;
+	}
+	
+	
+	
 	
 }
