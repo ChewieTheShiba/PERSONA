@@ -117,28 +117,28 @@ public class Shadow
 						
 						if(b.isWall())
 						{
-							if(b.getHitbox().intersects(x+10, y, hitbox.width, hitbox.height) && walkingRight)
+							if(b.getHitbox().intersects(x+5, y, hitbox.width, hitbox.height) && walkingRight)
 							{
 								walkingRight = false;
 								walkingUp = true;
 								walkingLeft = false;
 								walkingDown = false;
 							}
-							else if(b.getHitbox().intersects(x, y-10, hitbox.width, hitbox.height) && walkingUp)
+							else if(b.getHitbox().intersects(x, y-5, hitbox.width, hitbox.height) && walkingUp)
 							{
 								walkingRight = false;
 								walkingUp = false;
 								walkingLeft = true;
 								walkingDown = false;
 							}
-							else if(b.getHitbox().intersects(x-10, y, hitbox.width, hitbox.height) && walkingLeft)
+							else if(b.getHitbox().intersects(x-5, y, hitbox.width, hitbox.height) && walkingLeft)
 							{
 								walkingRight = false;
 								walkingUp = false;
 								walkingLeft = false;
 								walkingDown = true;
 							}
-							else if(b.getHitbox().intersects(x, y+10, hitbox.width, hitbox.height) && walkingDown)
+							else if(b.getHitbox().intersects(x, y+5, hitbox.width, hitbox.height) && walkingDown)
 							{
 								walkingRight = true;
 								walkingUp = false;
@@ -146,7 +146,7 @@ public class Shadow
 								walkingDown = false;
 							}
 
-							if(!b.getHitbox().intersects(x, y+10, hitbox.width, hitbox.height) && !walkingUp && rando == 0)
+							if(!b.getHitbox().intersects(x, y+5, hitbox.width, hitbox.height) && !walkingUp && rando == 0)
 							{
 								walkingRight = false;
 								walkingUp = false;
@@ -166,20 +166,20 @@ public class Shadow
 			if(walkingRight)
 			{
 				sprite = new ImageIcon(spriteString.substring(0, spriteString.indexOf(';')) + ";Right.png");
-				x += 10;
+				x += 5;
 			}
 			else if(walkingUp)
 			{
-				y -= 10;
+				y -= 5;
 			}
 			else if(walkingLeft)
 			{
 				sprite = new ImageIcon(spriteString.substring(0, spriteString.indexOf(';')) + ";Left.png");
-				x -= 10;
+				x -= 5;
 			}
 			else if(walkingDown)
 			{
-				y += 10;
+				y += 5;
 			}
 		}
 	}
