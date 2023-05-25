@@ -17,9 +17,7 @@ public class Shadow
 	private boolean walkingUp, walkingDown, walkingLeft, walkingRight;
 	private int[] attackPows;
 	private String[] attackNames, attackTypes;
-	private String id;
-	public static int copyNum = 0;
-	
+
 	public Shadow(ImageIcon sprite, int x, int y, int width, int height, int[] attackPows, String[] attackNames, String[] attackTypes)
 	{
 		this.masterSprite = sprite;
@@ -30,7 +28,6 @@ public class Shadow
 		this.walkingLeft = false;
 		this.walkingUp = false;
 		this.walkingDown = false;
-		this.id = "";
 		this.x = x;
 		this.y = y;
 		this.sprite = sprite;
@@ -47,17 +44,15 @@ public class Shadow
 		this.walkingLeft = false;
 		this.walkingUp = false;
 		this.walkingDown = false;
-		this.id = id;
 		this.x = x;
 		this.y = y;
 		this.sprite = sprite;
 		hitbox = new Rectangle(x, y, width, height);
 	}
 	
-	public Shadow copy()
+	public Shadow copy(int x, int y)
 	{
-		Shadow s = new Shadow(sprite, x, y, hitbox.width, hitbox.height, attackPows, attackNames, attackTypes, "" + copyNum);
-		copyNum++;
+		Shadow s = new Shadow(sprite, x, y, hitbox.width, hitbox.height, attackPows, attackNames, attackTypes);
 		return s;
 	}
 
@@ -105,80 +100,87 @@ public class Shadow
 	{	
 		int rando = (int)(Math.random()*50);
 		String spriteString = masterSprite.toString();
+		boolean isLoaded = false;
 		
 		for(Room r : rooms)
 		{
-			for(Block t[] : r.getRoom())
+			if(r.getRightX() >= x && r.getLeftX() <= x && r.getTopY() <= y && r.getBotY() >= y)
 			{
-				for(Block b : t)
+				isLoaded = true;
+				for(Block t[] : r.getRoom())
 				{
-					//MIGHT BE A BETTER WAY TO DO THIS BUT TRYING TO DETECT IF THEY HIT A BLOCK LIKE THIS AND
-					//IF ITS LAGGY ILL OPTIMIZE TO LOADING BLOCKS INSTEAD OF ROOMS OR LOADING ROOM PLAYER IS IN
-					
-					
-					if(b.isWall())
+					for(Block b : t)
 					{
-						if(b.getHitbox().intersects(x+10, y, hitbox.width, hitbox.height) && walkingRight)
+						//MIGHT BE A BETTER WAY TO DO THIS BUT TRYING TO DETECT IF THEY HIT A BLOCK LIKE THIS AND
+						//IF ITS LAGGY ILL OPTIMIZE TO LOADING BLOCKS INSTEAD OF ROOMS OR LOADING ROOM PLAYER IS IN
+						
+						
+						if(b.isWall())
 						{
-							walkingRight = false;
-							walkingUp = true;
-							walkingLeft = false;
-							walkingDown = false;
-						}
-						else if(b.getHitbox().intersects(x, y-10, hitbox.width, hitbox.height) && walkingUp)
-						{
-							walkingRight = false;
-							walkingUp = false;
-							walkingLeft = true;
-							walkingDown = false;
-						}
-						else if(b.getHitbox().intersects(x-10, y, hitbox.width, hitbox.height) && walkingLeft)
-						{
-							walkingRight = false;
-							walkingUp = false;
-							walkingLeft = false;
-							walkingDown = true;
-						}
-						else if(b.getHitbox().intersects(x, y+10, hitbox.width, hitbox.height) && walkingDown)
-						{
-							walkingRight = true;
-							walkingUp = false;
-							walkingLeft = false;
-							walkingDown = false;
-						}
+							if(b.getHitbox().intersects(x+10, y, hitbox.width, hitbox.height) && walkingRight)
+							{
+								walkingRight = false;
+								walkingUp = true;
+								walkingLeft = false;
+								walkingDown = false;
+							}
+							else if(b.getHitbox().intersects(x, y-10, hitbox.width, hitbox.height) && walkingUp)
+							{
+								walkingRight = false;
+								walkingUp = false;
+								walkingLeft = true;
+								walkingDown = false;
+							}
+							else if(b.getHitbox().intersects(x-10, y, hitbox.width, hitbox.height) && walkingLeft)
+							{
+								walkingRight = false;
+								walkingUp = false;
+								walkingLeft = false;
+								walkingDown = true;
+							}
+							else if(b.getHitbox().intersects(x, y+10, hitbox.width, hitbox.height) && walkingDown)
+							{
+								walkingRight = true;
+								walkingUp = false;
+								walkingLeft = false;
+								walkingDown = false;
+							}
 
-						if(!b.getHitbox().intersects(x, y+10, hitbox.width, hitbox.height) && !walkingUp && rando == 0)
-						{
-							walkingRight = false;
-							walkingUp = false;
-							walkingLeft = false;
-							walkingDown = true;
-							sprite = new ImageIcon(spriteString.substring(0, spriteString.indexOf(';')) + ";Left.png");
+							if(!b.getHitbox().intersects(x, y+10, hitbox.width, hitbox.height) && !walkingUp && rando == 0)
+							{
+								walkingRight = false;
+								walkingUp = false;
+								walkingLeft = false;
+								walkingDown = true;
+								sprite = new ImageIcon(spriteString.substring(0, spriteString.indexOf(';')) + ";Left.png");
+							}
+								
 						}
-							
 					}
 				}
 			}
 		}
-		
-		//System.out.println("\n" + walkingRight + "\n" + walkingLeft + "\n" + walkingUp + "\n" + walkingDown);
-		if(walkingRight)
+		if(isLoaded)
 		{
-			sprite = new ImageIcon(spriteString.substring(0, spriteString.indexOf(';')) + ";Right.png");
-			x += 10;
-		}
-		else if(walkingUp)
-		{
-			y -= 10;
-		}
-		else if(walkingLeft)
-		{
-			sprite = new ImageIcon(spriteString.substring(0, spriteString.indexOf(';')) + ";Left.png");
-			x -= 10;
-		}
-		else if(walkingDown)
-		{
-			y += 10;
+			//System.out.println("\n" + walkingRight + "\n" + walkingLeft + "\n" + walkingUp + "\n" + walkingDown);
+			if(walkingRight)
+			{
+				sprite = new ImageIcon(spriteString.substring(0, spriteString.indexOf(';')) + ";Right.png");
+				x += 10;
+			}
+			else if(walkingUp)
+			{
+				y -= 10;
+			}
+			else if(walkingLeft)
+			{
+				sprite = new ImageIcon(spriteString.substring(0, spriteString.indexOf(';')) + ";Left.png");
+				x -= 10;
+			}
+			else if(walkingDown)
+			{
+				y += 10;
+			}
 		}
 	}
 	

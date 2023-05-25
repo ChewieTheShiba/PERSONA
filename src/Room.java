@@ -15,21 +15,17 @@ import java.io.*;
 public class Room
 {
 	private Block[][] room;
-	private int x, y, tLeftx, tLefty, tRightx, tRighty, bLeftx, bLefty, bRightx, bRighty;
+	private int x, y, leftX, rightX, topY, botY;
 	
 	public Room(int x, int y)
 	{
 		room = new Block[25][25];
 		this.x = x;
 		this.y = y;
-		tLeftx = x;
-		tLefty = y;
-		tRightx = x+800;
-		tRighty = y;
-		bLeftx = x;
-		bLefty = y+800;
-		bRightx = x+800;
-		bRighty = y+800;
+		leftX = x;
+		topY = y;
+		rightX = x+800;
+		botY = y+800;
 	}
 	
 	public Room loadRoom(String file)
@@ -130,86 +126,47 @@ public class Room
 		this.y = y;
 	}
 
-	public int gettLeftx()
+	public int getLeftX()
 	{
-		return tLeftx;
+		return leftX;
 	}
 
-	public void settLeftx(int tLeftx)
+	public void setLeftX(int leftX)
 	{
-		this.tLeftx = tLeftx;
+		this.leftX = leftX;
 	}
 
-	public int gettLefty()
+	public int getRightX()
 	{
-		return tLefty;
+		return rightX;
 	}
 
-	public void settLefty(int tLefty)
+	public void setRightX(int rightX)
 	{
-		this.tLefty = tLefty;
+		this.rightX = rightX;
 	}
 
-	public int gettRightx()
+	public int getTopY()
 	{
-		return tRightx;
+		return topY;
 	}
 
-	public void settRightx(int tRightx)
+	public void setTopY(int topY)
 	{
-		this.tRightx = tRightx;
+		this.topY = topY;
 	}
 
-	public int gettRighty()
+	public int getBotY()
 	{
-		return tRighty;
+		return botY;
 	}
 
-	public void settRighty(int tRighty)
+	public void setBotY(int botY)
 	{
-		this.tRighty = tRighty;
+		this.botY = botY;
 	}
 
-	public int getbLeftx()
-	{
-		return bLeftx;
-	}
-
-	public void setbLeftx(int bLeftx)
-	{
-		this.bLeftx = bLeftx;
-	}
-
-	public int getbLefty()
-	{
-		return bLefty;
-	}
-
-	public void setbLefty(int bLefty)
-	{
-		this.bLefty = bLefty;
-	}
-
-	public int getbRightx()
-	{
-		return bRightx;
-	}
-
-	public void setbRightx(int bRightx)
-	{
-		this.bRightx = bRightx;
-	}
-
-	public int getbRighty()
-	{
-		return bRighty;
-	}
-
-	public void setbRighty(int bRighty)
-	{
-		this.bRighty = bRighty;
-	}
-
+	
 	
 	
 	

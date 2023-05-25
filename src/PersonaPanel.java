@@ -45,9 +45,7 @@ public class PersonaPanel extends JPanel
 		player = new Player(w/2, h/2);
 		SLIME = new Shadow(new ImageIcon("assets/shadows/Slime;Right.png"), 1000, 500, 50, 33, new int[]{10, 11, 12, 13}, new String[]{"slime", "slime2", "slime3", "slime4"}, new String[]{"Phys", "Phys", "Phys", "Phys"});
 		shadows = new ArrayList<Shadow>();
-		shadows.add(SLIME.copy());
-		shadows.add(SLIME.copy());
-		shadows.add(SLIME.copy());
+		loadShadows();
 		
 		this.add(panel);
 		this.addKeyListener(new KeyListen());
@@ -108,6 +106,37 @@ public class PersonaPanel extends JPanel
 			map[x][0] = new Room(0, x*32*25).loadRoom("assets/siderooms/left/room" + ((int)(Math.random()*5 + 1)) + ".txt");
 		for(int x = 1; x < 9; x++)
 			map[9][x] = new Room(8000-32*25, x*32*25).loadRoom("assets/siderooms/right/room" + ((int)(Math.random()*5 + 1)) + ".txt");
+	}
+	
+	public void loadShadows()
+	{
+		for(Room[] t : map)
+		{
+			for(Room r : t)
+			{
+				if((int)(Math.random()*2) == 0)
+				{
+					int x = 0, y = 0;
+					boolean tryer = true;
+					
+					while(tryer)
+					{
+						tryer = false;
+						x = (int)(Math.random() * 800 + r.getX());
+						y = (int)(Math.random() * 800 + r.getY());
+						for(Block[] g : r.getRoom()) 
+						{
+							for(Block b : g)
+							{
+								if(b.isWall() && b.getHitbox().intersects(x, y, 50, 50))
+									tryer = true;
+							}
+						}
+					}
+					shadows.add(SLIME.copy(x, y));
+				}
+			}
+		}
 	}
 	
 	private class KeyListen implements KeyListener
@@ -192,7 +221,7 @@ public class PersonaPanel extends JPanel
 		{
 			for(Room r : t)
 			{
-				if((Math.abs(player.getX()-r.gettLeftx()) <= 960 && Math.abs(player.getY()-r.gettLefty()) <= 540) || (Math.abs(player.getX()-r.getbLeftx()) <= 960 && Math.abs(player.getY()-r.getbLefty()) <= 540) || (Math.abs(player.getX()-r.gettRightx()) <= 960 && Math.abs(player.getY()-r.gettRighty()) <= 540) || (Math.abs(player.getX()-r.getbRightx()) <= 960 && Math.abs(player.getY()-r.getbRighty()) <= 540))
+				if((Math.abs(player.getX()-r.getLeftX()) <= 960 && Math.abs(player.getY()-r.getTopY()) <= 540) || (Math.abs(player.getX()-r.getLeftX()) <= 960 && Math.abs(player.getY()-r.getBotY()) <= 540) || (Math.abs(player.getX()-r.getRightX()) <= 960 && Math.abs(player.getY()-r.getTopY()) <= 540) || (Math.abs(player.getX()-r.getRightX()) <= 960 && Math.abs(player.getY()-r.getBotY()) <= 540))
 					loadedRooms.add(r);
 			}
 		}
@@ -201,7 +230,9 @@ public class PersonaPanel extends JPanel
 	public void updateShadows()
 	{
 		for(Shadow s : shadows)
+		{
 			s.move(loadedRooms);
+		}
 	}
 	
 	public void updatePlayer()
