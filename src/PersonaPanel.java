@@ -75,6 +75,7 @@ public class PersonaPanel extends JPanel
 			ImageIcon pMoves = new ImageIcon("assets/fight/playerMove.png");
 			ImageIcon selectTriangle = new ImageIcon("assets/fight/selectTriangle.png");
 			ImageIcon perSprite = player.getPersona().getSprite();
+			ImageIcon fText = new ImageIcon("assets/fight/fightText.png");
 			String s = player.getEnemy().getMasterSprite().toString();
 			s = s.substring(0, s.indexOf(';'))+";LeftBig.png";
 			ImageIcon sSprite = new ImageIcon(s);
@@ -108,7 +109,24 @@ public class PersonaPanel extends JPanel
 					selectTriangle.paintIcon(panel, g, 105, 867+pSel*45);
 				}
 			}
-			//else if(!player.isPlayerTurn())
+			else
+			{
+				fText.paintIcon(panel, g, 225, 820);
+				if(!player.isEnemyTurn())
+				{
+					String b = player.getPersona().getSprite().toString();
+					g.setFont(new Font("Times New Roman", Font.PLAIN, 40));
+					if(personaSelected)
+						g.drawString(b.substring(b.lastIndexOf('/')+1, b.indexOf('.')) + " used " +  player.getPersona().getAttackNames()[pSel], 300, 820+267/2);
+					else
+					{
+						if(pSel == 0)
+							g.drawString("You attacked", 300, 820+267/2);
+						else
+							g.drawString("You defended", 300, 820+267/2);
+					}
+				}
+			}
 				
 		}
 		else
@@ -247,7 +265,6 @@ public class PersonaPanel extends JPanel
 								personaSelected = true;
 							else
 								player.setPlayerTurn(false);
-							pSel = 0;
 							break;
 					}
 				}
@@ -265,8 +282,18 @@ public class PersonaPanel extends JPanel
 							break;
 						case KeyEvent.VK_SPACE:
 							player.setPlayerTurn(false);
-							pSel = 0;
 							break;
+					}
+				}
+			}
+			else if(!player.isPlayerTurn())
+			{
+				if(!player.isEnemyTurn())
+				{
+					if(e.getKeyCode() == KeyEvent.VK_SPACE)
+					{
+						pSel = 0;
+						player.setEnemyTurn(true);
 					}
 				}
 			}

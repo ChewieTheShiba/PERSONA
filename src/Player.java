@@ -18,7 +18,7 @@ public class Player
 {
 	private int x, y, hp, sp;
 	private ImageIcon sprite;
-	private boolean faceRight, faceLeft, faceUp, faceDown, walkingUp, walkingDown, walkingLeft, walkingRight, isPlayerTurn, isFighting;
+	private boolean faceRight, faceLeft, faceUp, faceDown, walkingUp, walkingDown, walkingLeft, walkingRight, isPlayerTurn, isFighting, isEnemyTurn;
 	private Rectangle hitbox;
 	private Shadow enemy;
 	private Persona persona;
@@ -30,6 +30,7 @@ public class Player
 		sp = 50;
 		isPlayerTurn = true;
 		isFighting = false;
+		isEnemyTurn = false;
 		this.y = y;
 		this.hitbox = new Rectangle(x, y, 28, 54);
 		sprite = new ImageIcon("assets/player/faceRight.png");
@@ -274,6 +275,16 @@ public class Player
 	public void setPersona(Persona persona)
 	{
 		this.persona = persona;
+	}
+
+	public boolean isEnemyTurn()
+	{
+		return isEnemyTurn;
+	}
+
+	public void setEnemyTurn(boolean isEnemyTurn)
+	{
+		this.isEnemyTurn = isEnemyTurn;
 	}
 	
 	
