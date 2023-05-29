@@ -21,6 +21,7 @@ public class Player
 	private boolean faceRight, faceLeft, faceUp, faceDown, walkingUp, walkingDown, walkingLeft, walkingRight, isPlayerTurn, isFighting;
 	private Rectangle hitbox;
 	private Shadow enemy;
+	private Persona persona;
 	
 	public Player(int x, int y)
 	{
@@ -32,6 +33,7 @@ public class Player
 		this.y = y;
 		this.hitbox = new Rectangle(x, y, 28, 54);
 		sprite = new ImageIcon("assets/player/faceRight.png");
+		persona = new Persona(new ImageIcon("assets/Personas/Izanagi.png"), new int[]{20, 30, 35, 40}, new String[]{"Bash", "Cleave", "Agi", "Bufu"}, new String[]{"Phys", "Phys", "Fire", "Ice"});
 	}
 	
 	public void drawPlayer(JPanel panel, Graphics2D g)
@@ -262,6 +264,16 @@ public class Player
 	public void setPlayerTurn(boolean isPlayerTurn)
 	{
 		this.isPlayerTurn = isPlayerTurn;
+	}
+
+	public Persona getPersona()
+	{
+		return persona;
+	}
+
+	public void setPersona(Persona persona)
+	{
+		this.persona = persona;
 	}
 	
 	

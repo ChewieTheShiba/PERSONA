@@ -19,7 +19,7 @@ import java.io.*;
 public class PersonaPanel extends JPanel
 {
 	// variables for the overall width and height
-	private int w, h;
+	private int w, h, pSel;
 	private Timer timer, battleTimer;
 	private Room[][] map;
 	private ArrayList<Room> loadedRooms;
@@ -29,6 +29,7 @@ public class PersonaPanel extends JPanel
 	private ImageIcon bg;
 	private final Shadow SLIME;
 	private ArrayList<Shadow> shadows;
+	private boolean personaSelected;
 	
 	// sets up the initial panel for drawing with proper size
 	public PersonaPanel(int w, int h)
@@ -48,6 +49,8 @@ public class PersonaPanel extends JPanel
 		SLIME = new Shadow(new ImageIcon("assets/shadows/Slime;Right.png"), 1000, 500, 50, 33, new int[]{10, 11, 12, 13}, new String[]{"slime", "slime2", "slime3", "slime4"}, new String[]{"Phys", "Phys", "Phys", "Phys"}, 100);
 		shadows = new ArrayList<Shadow>();
 		loadShadows();
+		personaSelected = false;
+		pSel = 0;
 		
 		player.setFighting(true);
 		player.setEnemy(SLIME);
@@ -67,20 +70,45 @@ public class PersonaPanel extends JPanel
 		
 		if(player.isFighting())
 		{
-			ImageIcon bg = new ImageIcon("assets/fightbg.png");
+			ImageIcon bg = new ImageIcon("assets/fight/fightbg.png");
 			ImageIcon pSprite = new ImageIcon("assets/player/fighting.png");
+			ImageIcon pMoves = new ImageIcon("assets/fight/playerMove.png");
+			ImageIcon selectTriangle = new ImageIcon("assets/fight/selectTriangle.png");
+			ImageIcon perSprite = player.getPersona().getSprite();
 			String s = player.getEnemy().getMasterSprite().toString();
 			s = s.substring(0, s.indexOf(';'))+";LeftBig.png";
 			ImageIcon sSprite = new ImageIcon(s);
 			
 			bg.paintIcon(panel, g, 0, 0);
+			perSprite.paintIcon(panel, g, 175, 250);
 			pSprite.paintIcon(panel, g, 100, 520);
 			sSprite.paintIcon(panel, g, 1200, 600);
 			
 			if(player.isPlayerTurn())
 			{
-				
+				if(!personaSelected)
+				{
+					pMoves.paintIcon(panel, g, 90, 820);
+					g.setFont(new Font("Times New Roman", Font.PLAIN, 36));
+					g.drawString("Attack", 145, 890);
+					g.drawString("Persona", 140, 950);
+					g.drawString("Defend", 140, 1010);
+					selectTriangle.paintIcon(panel, g, 105, 867+pSel*60);
+				}
+				else
+				{
+					pMoves.paintIcon(panel, g, 90, 820);
+					g.setFont(new Font("Times New Roman", Font.PLAIN, 36));
+					String[] aNames = player.getPersona().getAttackNames();
+					for(int x = 0; x < aNames.length; x++)
+					{
+						int i = 180/aNames.length;
+						g.drawString(aNames[x], 145, 890+x*i);
+					}
+					selectTriangle.paintIcon(panel, g, 105, 867+pSel*45);
+				}
 			}
+			//else if(!player.isPlayerTurn())
 				
 		}
 		else
@@ -182,42 +210,88 @@ public class PersonaPanel extends JPanel
 
 		public void keyPressed(KeyEvent e)
 		{
-			switch(e.getKeyCode()) 
+			if(!player.isFighting())
 			{
-				case KeyEvent.VK_D:
-					player.setWalkingRight(true);
-					break;
-				case KeyEvent.VK_A:
-					player.setWalkingLeft(true);
-					break;
-				case KeyEvent.VK_W:
-					player.setWalkingUp(true);
-					break;
-				case KeyEvent.VK_S:
-					player.setWalkingDown(true);
-					break;
+				switch(e.getKeyCode()) 
+				{
+					case KeyEvent.VK_D:
+						player.setWalkingRight(true);
+						break;
+					case KeyEvent.VK_A:
+						player.setWalkingLeft(true);
+						break;
+					case KeyEvent.VK_W:
+						player.setWalkingUp(true);
+						break;
+					case KeyEvent.VK_S:
+						player.setWalkingDown(true);
+						break;
+				}
 			}
-			
+			else if(player.isPlayerTurn())
+			{
+				if(!personaSelected)
+				{
+					switch(e.getKeyCode()) 
+					{
+						case KeyEvent.VK_S:
+							if(pSel == 2);
+							else pSel++;
+							break;
+						case KeyEvent.VK_W:
+							if(pSel == 0);
+							else pSel--;
+							break;
+						case KeyEvent.VK_SPACE:
+							if(pSel == 1)
+								personaSelected = true;
+							else
+								player.setPlayerTurn(false);
+							pSel = 0;
+							break;
+					}
+				}
+				else
+				{
+					switch(e.getKeyCode()) 
+					{
+						case KeyEvent.VK_S:
+							if(pSel == player.getPersona().getAttackNames().length-1);
+							else pSel++;
+							break;
+						case KeyEvent.VK_W:
+							if(pSel == 0);
+							else pSel--;
+							break;
+						case KeyEvent.VK_SPACE:
+							player.setPlayerTurn(false);
+							pSel = 0;
+							break;
+					}
+				}
+			}
 		}
 
 		public void keyReleased(KeyEvent e)
 		{
-			switch(e.getKeyCode()) 
+			if(!player.isFighting())
 			{
-				case KeyEvent.VK_D:
-					player.setWalkingRight(false);
-					break;
-				case KeyEvent.VK_A:
-					player.setWalkingLeft(false);
-					break;
-				case KeyEvent.VK_W:
-					player.setWalkingUp(false);
-					break;
-				case KeyEvent.VK_S:
-					player.setWalkingDown(false);
-					break;
+				switch(e.getKeyCode()) 
+				{
+					case KeyEvent.VK_D:
+						player.setWalkingRight(false);
+						break;
+					case KeyEvent.VK_A:
+						player.setWalkingLeft(false);
+						break;
+					case KeyEvent.VK_W:
+						player.setWalkingUp(false);
+						break;
+					case KeyEvent.VK_S:
+						player.setWalkingDown(false);
+						break;
+				}
 			}
-			
 		}
 		
 	}
