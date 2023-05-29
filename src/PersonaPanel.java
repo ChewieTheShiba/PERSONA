@@ -20,10 +20,11 @@ public class PersonaPanel extends JPanel
 {
 	// variables for the overall width and height
 	private int w, h;
-	private Timer timer;
+	private Timer timer, battleTimer;
 	private Room[][] map;
 	private ArrayList<Room> loadedRooms;
-	private JPanel panel;
+	public JPanel panel;
+	public Graphics2D g;
 	private Player player;
 	private ImageIcon bg;
 	private final Shadow SLIME;
@@ -40,12 +41,16 @@ public class PersonaPanel extends JPanel
 		loadMap();
 		loadedRooms = new ArrayList<Room>();
 		timer = new Timer(20, new ActionListen());
+		battleTimer = new Timer(20, new ActionListen());
 		timer.start();
 		panel = new JPanel();
 		player = new Player(w/2, h/2);
 		SLIME = new Shadow(new ImageIcon("assets/shadows/Slime;Right.png"), 1000, 500, 50, 33, new int[]{10, 11, 12, 13}, new String[]{"slime", "slime2", "slime3", "slime4"}, new String[]{"Phys", "Phys", "Phys", "Phys"}, 100);
 		shadows = new ArrayList<Shadow>();
 		loadShadows();
+		
+		player.setFighting(true);
+		player.setEnemy(SLIME);
 		
 		this.add(panel);
 		this.addKeyListener(new KeyListen());
@@ -60,24 +65,44 @@ public class PersonaPanel extends JPanel
 		super.paintComponent(tg);
 		g = (Graphics2D) tg;
 		
-		for(int y = 0; y < 8000; y += 280)
+		if(player.isFighting())
 		{
-			for(int x = 0; x < 8000; x += 498)
+			ImageIcon bg = new ImageIcon("assets/fightbg.png");
+			ImageIcon pSprite = new ImageIcon("assets/player/fighting.png");
+			String s = player.getEnemy().getMasterSprite().toString();
+			s = s.substring(0, s.indexOf(';'))+";LeftBig.png";
+			ImageIcon sSprite = new ImageIcon(s);
+			
+			bg.paintIcon(panel, g, 0, 0);
+			pSprite.paintIcon(panel, g, 100, 520);
+			sSprite.paintIcon(panel, g, 1200, 600);
+			
+			if(player.isPlayerTurn())
 			{
-				bg.paintIcon(panel, g, x, y);
+				
 			}
+				
 		}
-		
-		player.battle(SLIME, panel, g);
+		else
+		{
+			for(int y = 0; y < 8000; y += 280)
+			{
+				for(int x = 0; x < 8000; x += 498)
+				{
+					bg.paintIcon(panel, g, x, y);
+				}
+			}
+			
 
-		// all drawings below here:
-		for(Room r : loadedRooms)
-			r.drawRoom(panel, g, player);
-		
-		for(Shadow s : shadows)
-			s.paintShadow(panel, g, player);
-		
-		player.drawPlayer(panel, g);
+			// all drawings below here:
+			for(Room r : loadedRooms)
+				r.drawRoom(panel, g, player);
+			
+			for(Shadow s : shadows)
+				s.paintShadow(panel, g, player);
+			
+			player.drawPlayer(panel, g);
+		}
 		
 	}
 	
@@ -141,6 +166,11 @@ public class PersonaPanel extends JPanel
 		}
 	}
 	
+	public void battle(Player p, Shadow e)
+	{
+		p.setEnemy(e);
+	}
+	
 	private class KeyListen implements KeyListener
 	{
 
@@ -199,9 +229,13 @@ public class PersonaPanel extends JPanel
 		{
 			Object source = e.getSource();
 			
-			if(source.equals(timer))
+			if(source.equals(timer) && !player.isFighting())
 			{
 				update();
+			}
+			else
+			{
+				repaint();
 			}
 			
 		}

@@ -18,17 +18,17 @@ public class Player
 {
 	private int x, y, hp, sp;
 	private ImageIcon sprite;
-	private boolean faceRight, faceLeft, faceUp, faceDown, walkingUp, walkingDown, walkingLeft, walkingRight;
+	private boolean faceRight, faceLeft, faceUp, faceDown, walkingUp, walkingDown, walkingLeft, walkingRight, isPlayerTurn, isFighting;
 	private Rectangle hitbox;
-	private Timer battleTimer;
 	private Shadow enemy;
 	
 	public Player(int x, int y)
 	{
 		this.x = x;
-		battleTimer = new Timer(20, new ActionListen());
 		hp = 100;
 		sp = 50;
+		isPlayerTurn = true;
+		isFighting = false;
 		this.y = y;
 		this.hitbox = new Rectangle(x, y, 28, 54);
 		sprite = new ImageIcon("assets/player/faceRight.png");
@@ -233,31 +233,35 @@ public class Player
 	{
 		return 0;
 	}
-	
-	public void battle(Shadow enemy, JPanel panel, Graphics2D g)
+
+	public boolean isFighting()
+	{
+		return isFighting;
+	}
+
+	public void setFighting(boolean isFighting)
+	{
+		this.isFighting = isFighting;
+	}
+
+	public Shadow getEnemy()
+	{
+		return enemy;
+	}
+
+	public void setEnemy(Shadow enemy)
 	{
 		this.enemy = enemy;
-		//paint stuff
-		//select persona, attack, or shield
-		//check if its shadows turn
-		
 	}
-	
-	private class ActionListen implements ActionListener
+
+	public boolean isPlayerTurn()
 	{
-		public void actionPerformed(ActionEvent e) 
-		{
-			Object source = e.getSource();
-			
-			if(source.equals(battleTimer))
-			{
-				ImageIcon bg = new ImageIcon("assets/fightbg.png");
-				ImageIcon pSprite = new ImageIcon("assets/player/fighting.png");
-				ImageIcon sSprite = enemy.getMasterSprite();
-				
-			}
-		}
-		
+		return isPlayerTurn;
+	}
+
+	public void setPlayerTurn(boolean isPlayerTurn)
+	{
+		this.isPlayerTurn = isPlayerTurn;
 	}
 	
 	
