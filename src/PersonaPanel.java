@@ -126,6 +126,10 @@ public class PersonaPanel extends JPanel
 							g.drawString("You defended", 300, 820+267/2);
 					}
 				}
+				else
+				{
+					
+				}
 			}
 				
 		}
