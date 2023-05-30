@@ -12,14 +12,16 @@ public class Persona
 {
 	private ImageIcon sprite;
 	private int[] attackPows;
+	private String type;
 	private String[] attackNames, attackTypes;
 	
-	public Persona(ImageIcon sprite, int[] attackPows, String[] attackNames, String[] attackTypes)
+	public Persona(ImageIcon sprite, int[] attackPows, String[] attackNames, String[] attackTypes, String type)
 	{
 		this.sprite = sprite;
 		this.attackPows = attackPows;
 		this.attackNames = attackNames;
 		this.attackTypes = attackTypes;
+		this.type = type;
 	}
 
 	public ImageIcon getSprite()
@@ -60,6 +62,16 @@ public class Persona
 	public void setAttackTypes(String[] attackTypes)
 	{
 		this.attackTypes = attackTypes;
+	}
+
+	public String getType()
+	{
+		return type;
+	}
+
+	public void setType(String type)
+	{
+		this.type = type;
 	}
 	
 	

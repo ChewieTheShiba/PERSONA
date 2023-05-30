@@ -19,7 +19,7 @@ import java.io.*;
 public class PersonaPanel extends JPanel
 {
 	// variables for the overall width and height
-	private int w, h, pSel;
+	private int w, h, pSel, sDamage, gxp;
 	private Timer timer, battleTimer;
 	private Room[][] map;
 	private ArrayList<Room> loadedRooms;
@@ -29,7 +29,7 @@ public class PersonaPanel extends JPanel
 	private ImageIcon bg;
 	private final Shadow SLIME;
 	private ArrayList<Shadow> shadows;
-	private boolean personaSelected;
+	private boolean personaSelected, won;
 	
 	// sets up the initial panel for drawing with proper size
 	public PersonaPanel(int w, int h)
@@ -46,14 +46,15 @@ public class PersonaPanel extends JPanel
 		timer.start();
 		panel = new JPanel();
 		player = new Player(w/2, h/2);
-		SLIME = new Shadow(new ImageIcon("assets/shadows/Slime;Right.png"), 1000, 500, 50, 33, new int[]{10, 11, 12, 13}, new String[]{"slime", "slime2", "slime3", "slime4"}, new String[]{"Phys", "Phys", "Phys", "Phys"}, 100);
+		SLIME = new Shadow(new ImageIcon("assets/shadows/Slime;Right.png"), 1000, 500, 50, 33, new int[]{10, 11, 12, 13}, new String[]{"Headbutt", "Agi", "Zio", "Lunge"}, new String[]{"Phys", "Fire", "Electric", "Phys"}, 100, "Phys", 1);
 		shadows = new ArrayList<Shadow>();
 		loadShadows();
 		personaSelected = false;
 		pSel = 0;
+		gxp = 0;
+		won = false;
 		
-		player.setFighting(true);
-		player.setEnemy(SLIME);
+		sDamage = 0;
 		
 		this.add(panel);
 		this.addKeyListener(new KeyListen());
@@ -70,12 +71,15 @@ public class PersonaPanel extends JPanel
 		
 		if(player.isFighting())
 		{
+			timer.stop();
+			battleTimer.start();
 			ImageIcon bg = new ImageIcon("assets/fight/fightbg.png");
 			ImageIcon pSprite = new ImageIcon("assets/player/fighting.png");
 			ImageIcon pMoves = new ImageIcon("assets/fight/playerMove.png");
 			ImageIcon selectTriangle = new ImageIcon("assets/fight/selectTriangle.png");
 			ImageIcon perSprite = player.getPersona().getSprite();
 			ImageIcon fText = new ImageIcon("assets/fight/fightText.png");
+			ImageIcon win = new ImageIcon("assets/fight/battleWin.png");
 			String s = player.getEnemy().getMasterSprite().toString();
 			s = s.substring(0, s.indexOf(';'))+";LeftBig.png";
 			ImageIcon sSprite = new ImageIcon(s);
@@ -84,9 +88,25 @@ public class PersonaPanel extends JPanel
 			perSprite.paintIcon(panel, g, 175, 250);
 			pSprite.paintIcon(panel, g, 100, 520);
 			sSprite.paintIcon(panel, g, 1200, 600);
+			g.setFont(new Font("Times New Roman", Font.PLAIN, 30));
+			g.setColor(Color.white);
+			g.drawString("HP: " + player.getHp(), 125, 500);
+			g.drawString("HP: " + player.getEnemy().getHp(), 1250, 580);
+			g.setColor(Color.black);
 			
-			if(player.isPlayerTurn())
+			if(won)
 			{
+				win.paintIcon(panel, g, 0, 0);
+				shadows.remove(player.getEnemy());
+				g.setColor(Color.white);
+				g.setFont(new Font("Arial", Font.BOLD, 80));
+				g.drawString("" + player.getLevel(), 405, 960);
+				g.drawString("" + gxp, 720, 395);
+				
+			}
+			else if(player.isPlayerTurn())
+			{
+				player.setGuarding(false);
 				if(!personaSelected)
 				{
 					pMoves.paintIcon(panel, g, 90, 820);
@@ -118,17 +138,20 @@ public class PersonaPanel extends JPanel
 					g.setFont(new Font("Times New Roman", Font.PLAIN, 40));
 					if(personaSelected)
 						g.drawString(b.substring(b.lastIndexOf('/')+1, b.indexOf('.')) + " used " +  player.getPersona().getAttackNames()[pSel], 300, 820+267/2);
+						
 					else
 					{
 						if(pSel == 0)
 							g.drawString("You attacked", 300, 820+267/2);
 						else
-							g.drawString("You defended", 300, 820+267/2);
+							g.drawString("You defended", 300, 820+267/2);	
 					}
 				}
 				else
 				{
-					
+					String b = player.getEnemy().getSprite().toString();
+					g.setFont(new Font("Times New Roman", Font.PLAIN, 40));
+					g.drawString(b.substring(b.lastIndexOf('/')+1, b.indexOf(';')) + " used " +  player.getEnemy().getAttackNames()[sDamage], 300, 820+267/2);
 				}
 			}
 				
@@ -210,7 +233,7 @@ public class PersonaPanel extends JPanel
 							}
 						}
 					}
-					shadows.add(SLIME.copy(x, y));
+					shadows.add(SLIME.copy(x, y, player));
 				}
 			}
 		}
@@ -232,7 +255,19 @@ public class PersonaPanel extends JPanel
 
 		public void keyPressed(KeyEvent e)
 		{
-			if(!player.isFighting())
+			if(won)
+			{
+				//System.out.println("hi");
+				if(e.getKeyCode() == KeyEvent.VK_SPACE)
+				{
+					shadows.remove(player.getEnemy());
+					timer.start();
+					battleTimer.stop();
+					player.setFighting(false);
+					won = false;
+				}
+			}
+			else if(!player.isFighting())
 			{
 				switch(e.getKeyCode()) 
 				{
@@ -296,8 +331,43 @@ public class PersonaPanel extends JPanel
 				{
 					if(e.getKeyCode() == KeyEvent.VK_SPACE)
 					{
+						if(personaSelected)
+							player.getEnemy().setHp((int)(player.getEnemy().getHp()-(player.getPersona().getAttackPows()[pSel]*player.isEffective(player.getPersona().getAttackTypes()[pSel], player.getEnemy().getType()))));
+						else if(pSel == 0)
+							player.getEnemy().setHp((int)(player.getEnemy().getHp()-(15*player.isEffective(player.getPersona().getAttackTypes()[pSel], player.getEnemy().getType()))));
+						else if(pSel == 2)
+							player.setGuarding(true);
+						
+						if(player.getEnemy().getHp() <= 0)
+						{
+							gxp = player.getEnemy().getLevel()*(int)(Math.random() * 5 + 5);
+							player.addXp(gxp);
+							won = true;
+						}
+							
+						sDamage = (int)(Math.random() * player.getEnemy().getAttackNames().length);
+						int damage = (int)(player.getEnemy().getAttackPows()[sDamage] * player.isEffective(player.getEnemy().getAttackTypes()[sDamage], player.getType()));
+						if(player.isGuarding())
+							damage = (int)(damage * (2.0/3));
+						player.setHp(player.getHp()-damage);
 						pSel = 0;
+						personaSelected = false;
 						player.setEnemyTurn(true);
+					}
+				}
+				else
+				{
+					if(e.getKeyCode() == KeyEvent.VK_SPACE)
+					{
+						if(player.getHp() <= 0)
+						{
+							player.setDead(true);
+							player.setFighting(false);
+							timer.start();
+							battleTimer.stop();
+						}
+						player.setPlayerTurn(true);
+						player.setEnemyTurn(false);
 					}
 				}
 			}
@@ -338,7 +408,7 @@ public class PersonaPanel extends JPanel
 			{
 				update();
 			}
-			else
+			else 
 			{
 				repaint();
 			}
@@ -370,9 +440,24 @@ public class PersonaPanel extends JPanel
 	
 	public void updateShadows()
 	{
-		for(Shadow s : shadows)
+		for(int i = 0; i < shadows.size(); i++)
 		{
-			s.move(loadedRooms);
+			Shadow s = shadows.get(i);
+			if(s.move(loadedRooms) && s.getHitbox().intersects(player.getHitbox()))
+			{
+				player.setEnemy(s);
+				player.setFighting(false);
+				player.setWalkingRight(false);
+				player.setWalkingLeft(false);
+				player.setWalkingUp(false);
+				player.setWalkingDown(false);
+				player.setFighting(true);
+				player.setPlayerTurn(true);
+				player.setGuarding(false);
+				player.setEnemyTurn(false);
+				personaSelected = false;
+				player.setHp(player.getMaxHP());
+			}
 		}
 	}
 	

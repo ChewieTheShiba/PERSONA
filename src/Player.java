@@ -16,9 +16,9 @@ import java.io.*;
 
 public class Player
 {
-	private int x, y, hp, sp;
+	private int x, y, maxHP, hp, sp, level, xp;
 	private ImageIcon sprite;
-	private boolean faceRight, faceLeft, faceUp, faceDown, walkingUp, walkingDown, walkingLeft, walkingRight, isPlayerTurn, isFighting, isEnemyTurn;
+	private boolean faceRight, faceLeft, faceUp, faceDown, walkingUp, walkingDown, walkingLeft, walkingRight, isPlayerTurn, isFighting, isEnemyTurn, isGuarding, isDead;
 	private Rectangle hitbox;
 	private Shadow enemy;
 	private Persona persona;
@@ -27,14 +27,19 @@ public class Player
 	{
 		this.x = x;
 		hp = 100;
+		maxHP = 100;
 		sp = 50;
 		isPlayerTurn = true;
+		level = 1;
+		xp = 0;
 		isFighting = false;
 		isEnemyTurn = false;
+		isDead = false;
+		isGuarding = false;
 		this.y = y;
 		this.hitbox = new Rectangle(x, y, 28, 54);
 		sprite = new ImageIcon("assets/player/faceRight.png");
-		persona = new Persona(new ImageIcon("assets/Personas/Izanagi.png"), new int[]{20, 30, 35, 40}, new String[]{"Bash", "Cleave", "Agi", "Bufu"}, new String[]{"Phys", "Phys", "Fire", "Ice"});
+		persona = new Persona(new ImageIcon("assets/Personas/Izanagi.png"), new int[]{13, 15, 17, 100}, new String[]{"Bash", "Cleave", "Agi", "Bufu"}, new String[]{"Phys", "Phys", "Fire", "Ice"}, "Electric");
 	}
 	
 	public void drawPlayer(JPanel panel, Graphics2D g)
@@ -65,11 +70,13 @@ public class Player
 
 	public void setX(int x)
 	{
+		this.hitbox = new Rectangle(x, hitbox.y, hitbox.width, hitbox.height);
 		this.x = x;
 	}
 
 	public int getY()
 	{
+		this.hitbox = new Rectangle(hitbox.x, y, hitbox.width, hitbox.height);
 		return y;
 	}
 
@@ -229,12 +236,16 @@ public class Player
 	
 	public String getType()
 	{
-		return "hi";
+		return persona.getType();
 	}
 	
-	public int isEffective(String aType, String dType)
+	public double isEffective(String aType, String dType)
 	{
-		return 0;
+		if((aType.equals("Fire") && dType.equals("Ice")) || (aType.equals("Ice") && dType.equals("Electric")) || (aType.equals("Electric") && dType.equals("Phys")) || (aType.equals("Phys") && dType.equals("Fire")))
+			return 2;
+		else if((aType.equals("Ice") && dType.equals("Fire")) || (aType.equals("Electric") && dType.equals("Ice")) || (aType.equals("Phys") && dType.equals("Electric")) || (aType.equals("Fire") && dType.equals("Phys")))
+			return 1.0/2;
+		return 1;
 	}
 
 	public boolean isFighting()
@@ -286,6 +297,65 @@ public class Player
 	{
 		this.isEnemyTurn = isEnemyTurn;
 	}
+
+	public boolean isGuarding()
+	{
+		return isGuarding;
+	}
+
+	public void setGuarding(boolean isGuarding)
+	{
+		this.isGuarding = isGuarding;
+	}
+
+	public int getLevel()
+	{
+		return level;
+	}
+
+	public void setLevel(int level)
+	{
+		this.level = level;
+	}
+
+	public int getXp()
+	{
+		return xp;
+	}
+
+	public void addXp(int xp)
+	{
+		this.xp += xp;
+		System.out.println(this.xp);
+		while(this.xp > level * 20)
+		{
+			this.xp -= level * 20;
+			maxHP += maxHP * 1.05;
+			level++;
+		}
+			
+	}
+
+	public boolean isDead()
+	{
+		return isDead;
+	}
+
+	public void setDead(boolean isDead)
+	{
+		this.isDead = isDead;
+	}
+
+	public int getMaxHP()
+	{
+		return maxHP;
+	}
+
+	public void setMaxHP(int maxHP)
+	{
+		this.maxHP = maxHP;
+	}
+	
 	
 	
 }

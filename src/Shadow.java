@@ -12,13 +12,14 @@ import java.io.*;
 public class Shadow
 {
 	private ImageIcon masterSprite, sprite;
-	private int x, y, hp;
+	private int x, y, hp, level;
 	private Rectangle hitbox;
 	private boolean walkingUp, walkingDown, walkingLeft, walkingRight;
 	private int[] attackPows;
 	private String[] attackNames, attackTypes;
+	private String type;
 
-	public Shadow(ImageIcon sprite, int x, int y, int width, int height, int[] attackPows, String[] attackNames, String[] attackTypes, int hp)
+	public Shadow(ImageIcon sprite, int x, int y, int width, int height, int[] attackPows, String[] attackNames, String[] attackTypes, int hp, String type, int level)
 	{
 		this.masterSprite = sprite;
 		this.attackPows = attackPows;
@@ -31,7 +32,9 @@ public class Shadow
 		this.hp = hp;
 		this.x = x;
 		this.y = y;
+		this.level = level;
 		this.sprite = sprite;
+		this.type = type;
 		hitbox = new Rectangle(x, y, width, height);
 	}
 	
@@ -51,9 +54,12 @@ public class Shadow
 		hitbox = new Rectangle(x, y, width, height);
 	}
 	
-	public Shadow copy(int x, int y)
+	public Shadow copy(int x, int y, Player p)
 	{
-		Shadow s = new Shadow(sprite, x, y, hitbox.width, hitbox.height, attackPows, attackNames, attackTypes, hp);
+		int l = p.getLevel()+((int)(Math.random()) * 6 - 3);
+		if(l < 1)
+			l = 1;
+		Shadow s = new Shadow(sprite, x, y, hitbox.width, hitbox.height, attackPows, attackNames, attackTypes, hp, type, l);
 		return s;
 	}
 
@@ -97,7 +103,7 @@ public class Shadow
 		this.hitbox = hitbox;
 	}
 	
-	public void move(ArrayList<Room> rooms)
+	public boolean move(ArrayList<Room> rooms)
 	{	
 		int rando = (int)(Math.random()*50);
 		String spriteString = masterSprite.toString();
@@ -168,21 +174,26 @@ public class Shadow
 			{
 				sprite = new ImageIcon(spriteString.substring(0, spriteString.indexOf(';')) + ";Right.png");
 				x += 5;
+				this.hitbox = new Rectangle(hitbox.x + 5, hitbox.y, hitbox.width, hitbox.height);
 			}
 			else if(walkingUp)
 			{
 				y -= 5;
+				this.hitbox = new Rectangle(hitbox.x, hitbox.y - 5, hitbox.width, hitbox.height);
 			}
 			else if(walkingLeft)
 			{
 				sprite = new ImageIcon(spriteString.substring(0, spriteString.indexOf(';')) + ";Left.png");
 				x -= 5;
+				this.hitbox = new Rectangle(hitbox.x - 5, hitbox.y, hitbox.width, hitbox.height);
 			}
 			else if(walkingDown)
 			{
 				y += 5;
+				this.hitbox = new Rectangle(hitbox.x, hitbox.y + 5, hitbox.width, hitbox.height);
 			}
 		}
+		return isLoaded;
 	}
 	
 	public void attack(int i, Player p)
@@ -280,6 +291,26 @@ public class Shadow
 
 	public void setAttackTypes(String[] attackTypes) {
 		this.attackTypes = attackTypes;
+	}
+
+	public String getType()
+	{
+		return type;
+	}
+
+	public void setType(String type)
+	{
+		this.type = type;
+	}
+
+	public int getLevel()
+	{
+		return level;
+	}
+
+	public void setLevel(int level)
+	{
+		this.level = level;
 	}
 	
 	
