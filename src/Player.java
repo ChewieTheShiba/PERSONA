@@ -330,7 +330,7 @@ public class Player
 		while(this.xp > level * 20)
 		{
 			this.xp -= level * 20;
-			maxHP += maxHP * 1.05;
+			maxHP = (int)(maxHP * 1.05 + 0.5);
 			level++;
 		}
 			
