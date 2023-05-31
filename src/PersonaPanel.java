@@ -478,17 +478,17 @@ public class PersonaPanel extends JPanel
 			if(s.move(loadedRooms) && s.getHitbox().intersects(player.getHitbox()))
 			{
 				player.setEnemy(s);
-				player.setFighting(false);
+				player.setFighting(true);
 				player.setWalkingRight(false);
 				player.setWalkingLeft(false);
 				player.setWalkingUp(false);
 				player.setWalkingDown(false);
-				player.setFighting(true);
 				player.setPlayerTurn(true);
 				player.setGuarding(false);
 				player.setEnemyTurn(false);
 				personaSelected = false;
 				player.setHp(player.getMaxHP());
+				break;
 			}
 		}
 	}
