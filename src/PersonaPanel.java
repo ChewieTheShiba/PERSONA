@@ -41,11 +41,11 @@ public class PersonaPanel extends JPanel
 		map = new Room[10][10];
 		loadMap();
 		loadedRooms = new ArrayList<Room>();
+		player = new Player(w/2, h/2);
 		timer = new Timer(20, new ActionListen());
 		battleTimer = new Timer(20, new ActionListen());
 		timer.start();
 		panel = new JPanel();
-		player = new Player(w/2, h/2);
 		SLIME = new Shadow(new ImageIcon("assets/shadows/Slime;Right.png"), 1000, 500, 50, 33, new int[]{10, 11, 12, 13}, new String[]{"Headbutt", "Agi", "Zio", "Lunge"}, new String[]{"Phys", "Fire", "Electric", "Phys"}, 100, "Phys", 1);
 		ANGEL = new Shadow(new ImageIcon("assets/shadows/Angel;Right.png"), 1000, 500, 50, 68, new int[]{12, 13, 15, 17}, new String[]{"Assualt Dive", "Bufu", "Inferno", "Sword Dance"}, new String[]{"Phys", "Ice", "Fire", "Phys"}, 105, "Electric", 1);
 		shadows = new ArrayList<Shadow>();
@@ -54,14 +54,12 @@ public class PersonaPanel extends JPanel
 		pSel = 0;
 		gxp = 0;
 		won = false;
-		
 		sDamage = 0;
 		
 		this.add(panel);
 		this.addKeyListener(new KeyListen());
 		this.setFocusable(true);
 	}
-
 	// all graphical components go here
 	// this.setBackground(Color c) for example will change background color
 	public void paintComponent(Graphics tg)
@@ -178,6 +176,14 @@ public class PersonaPanel extends JPanel
 				
 			
 			player.drawPlayer(panel, g);
+			
+			if(player.isInMenu())
+			{
+				ImageIcon menu = new ImageIcon("assets/menuScreen.png");
+				ImageIcon selectTriangle = new ImageIcon("assets/fight/selectTriangle.png");
+				menu.paintIcon(panel, g, 0, 0);
+				//selectTriangle.paintIcon(panel, g, gxp, gxp);
+			}
 		}
 		
 	}
@@ -268,6 +274,27 @@ public class PersonaPanel extends JPanel
 					won = false;
 				}
 			}
+			else if(player.isInMenu())
+			{
+				switch(e.getKeyCode()) 
+				{
+					case KeyEvent.VK_W:
+						if(pSel == 0);
+						else pSel++;
+						break;
+					case KeyEvent.VK_S:
+						if(pSel == 3);
+						else pSel--;
+						break;
+					case KeyEvent.VK_F:
+						player.setInMenu(false);
+						break;
+					case KeyEvent.VK_SPACE:
+						if(pSel == 1);
+						else if(pSel == 2);
+						else if(pSel == 3);
+				}				
+			}
 			else if(!player.isFighting())
 			{
 				switch(e.getKeyCode()) 
@@ -283,6 +310,10 @@ public class PersonaPanel extends JPanel
 						break;
 					case KeyEvent.VK_S:
 						player.setWalkingDown(true);
+						break;
+					case KeyEvent.VK_F:
+						player.setInMenu(true);
+						pSel = 0;
 						break;
 				}
 			}
@@ -507,6 +538,37 @@ public class PersonaPanel extends JPanel
 		{
 			player.setY(player.getY()+10);
 		}
+	}
+	
+	public void reset()
+	{
+		player.setX(960);
+		player.setY(540);
+		player.setDead(false);
+		player.setLevel(1);
+		player.setXp(0);
+		player.setGuarding(false);
+		player.setDead(false);
+		player.setMaxHP(100);
+		player.setInMenu(false);
+		player.setWalkingRight(false);
+		player.setWalkingLeft(false);
+		player.setWalkingUp(false);
+		player.setWalkingDown(false);
+		hp = 100;
+		maxHP = 100;
+		sp = 50;
+		isPlayerTurn = true;
+		level = 1;
+		xp = 0;
+		isFighting = false;
+		isEnemyTurn = false;
+		isDead = false;
+		isGuarding = false;
+		isInMenu = false;
+		this.y = y;
+		this.hitbox = new Rectangle(x, y, 28, 54);
+		sprite = new ImageIcon("assets/player/faceRight.png");
 	}
 	
 	

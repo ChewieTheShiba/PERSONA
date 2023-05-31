@@ -18,7 +18,7 @@ public class Player
 {
 	private int x, y, maxHP, hp, sp, level, xp;
 	private ImageIcon sprite;
-	private boolean faceRight, faceLeft, faceUp, faceDown, walkingUp, walkingDown, walkingLeft, walkingRight, isPlayerTurn, isFighting, isEnemyTurn, isGuarding, isDead;
+	private boolean faceRight, faceLeft, faceUp, faceDown, walkingUp, walkingDown, walkingLeft, walkingRight, isPlayerTurn, isFighting, isEnemyTurn, isGuarding, isDead, isInMenu;
 	private Rectangle hitbox;
 	private Shadow enemy;
 	private Persona persona;
@@ -36,10 +36,11 @@ public class Player
 		isEnemyTurn = false;
 		isDead = false;
 		isGuarding = false;
+		isInMenu = false;
 		this.y = y;
 		this.hitbox = new Rectangle(x, y, 28, 54);
 		sprite = new ImageIcon("assets/player/faceRight.png");
-		persona = new Persona(new ImageIcon("assets/Personas/Izanagi No Okami Piccaro.png"), new int[]{13, 15, 17, 19}, new String[]{"Bash", "Cleave", "Agi", "Bufu"}, new String[]{"Phys", "Phys", "Fire", "Ice"}, "Electric");
+		persona = new Persona(new ImageIcon("assets/Personas/Izanagi No Okami Piccaro.png"), new int[]{13, 15, 17, 100}, new String[]{"Bash", "Cleave", "Agi", "Bufu"}, new String[]{"Phys", "Phys", "Fire", "Ice"}, "Electric");
 	}
 	
 	public void drawPlayer(JPanel panel, Graphics2D g)
@@ -354,6 +355,18 @@ public class Player
 	public void setMaxHP(int maxHP)
 	{
 		this.maxHP = maxHP;
+	}
+
+	public boolean isInMenu() {
+		return isInMenu;
+	}
+
+	public void setInMenu(boolean isInMenu) {
+		this.isInMenu = isInMenu;
+	}
+
+	public void setXp(int xp) {
+		this.xp = xp;
 	}
 	
 	
