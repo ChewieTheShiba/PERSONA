@@ -1,4 +1,4 @@
-//import JFrame
+//import JFramef
 import javax.swing.JFrame;
 
 

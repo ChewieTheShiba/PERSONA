@@ -59,6 +59,7 @@ public class Shadow
 		int l = p.getLevel()+((int)(Math.random()) * 6 - 3);
 		if(l < 1)
 			l = 1;
+		int hp = (int)(100 * Math.pow(1.05, l));
 		Shadow s = new Shadow(sprite, x, y, hitbox.width, hitbox.height, attackPows, attackNames, attackTypes, hp, type, l);
 		return s;
 	}

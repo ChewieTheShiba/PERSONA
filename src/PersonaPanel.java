@@ -27,7 +27,7 @@ public class PersonaPanel extends JPanel
 	public Graphics2D g;
 	private Player player;
 	private ImageIcon bg;
-	private final Shadow SLIME;
+	private final Shadow SLIME, ANGEL;
 	private ArrayList<Shadow> shadows;
 	private boolean personaSelected, won;
 	
@@ -47,6 +47,7 @@ public class PersonaPanel extends JPanel
 		panel = new JPanel();
 		player = new Player(w/2, h/2);
 		SLIME = new Shadow(new ImageIcon("assets/shadows/Slime;Right.png"), 1000, 500, 50, 33, new int[]{10, 11, 12, 13}, new String[]{"Headbutt", "Agi", "Zio", "Lunge"}, new String[]{"Phys", "Fire", "Electric", "Phys"}, 100, "Phys", 1);
+		ANGEL = new Shadow(new ImageIcon("assets/shadows/Angel;Right.png"), 1000, 500, 50, 68, new int[]{12, 13, 15, 17}, new String[]{"Assualt Dive", "Bufu", "Inferno", "Sword Dance"}, new String[]{"Phys", "Ice", "Fire", "Phys"}, 105, "Electric", 1);
 		shadows = new ArrayList<Shadow>();
 		loadShadows();
 		personaSelected = false;
@@ -92,6 +93,7 @@ public class PersonaPanel extends JPanel
 			g.setColor(Color.white);
 			g.drawString("HP: " + player.getHp(), 125, 500);
 			g.drawString("HP: " + player.getEnemy().getHp(), 1250, 580);
+			g.drawString("Level: " + player.getEnemy().getLevel(), 1275, 825);
 			g.setColor(Color.black);
 			
 			if(won)
@@ -173,6 +175,7 @@ public class PersonaPanel extends JPanel
 			
 			for(Shadow s : shadows)
 				s.paintShadow(panel, g, player);
+				
 			
 			player.drawPlayer(panel, g);
 		}
@@ -233,15 +236,13 @@ public class PersonaPanel extends JPanel
 							}
 						}
 					}
-					shadows.add(SLIME.copy(x, y, player));
+					if(!((int)(Math.random() * 3) == 0))
+						shadows.add(SLIME.copy(x, y, player));
+					else
+						shadows.add(ANGEL.copy(x, y, player));
 				}
 			}
 		}
-	}
-	
-	public void battle(Player p, Shadow e)
-	{
-		p.setEnemy(e);
 	}
 	
 	private class KeyListen implements KeyListener
@@ -332,9 +333,9 @@ public class PersonaPanel extends JPanel
 					if(e.getKeyCode() == KeyEvent.VK_SPACE)
 					{
 						if(personaSelected)
-							player.getEnemy().setHp((int)(player.getEnemy().getHp()-(player.getPersona().getAttackPows()[pSel]*player.isEffective(player.getPersona().getAttackTypes()[pSel], player.getEnemy().getType()))));
+							player.getEnemy().setHp((int)(player.getEnemy().getHp()-(player.getPersona().getAttackPows()[pSel]*player.isEffective(player.getPersona().getAttackTypes()[pSel], player.getEnemy().getType()))*Math.pow(1.05, player.getLevel())));
 						else if(pSel == 0)
-							player.getEnemy().setHp((int)(player.getEnemy().getHp()-(15*player.isEffective(player.getPersona().getAttackTypes()[pSel], player.getEnemy().getType()))));
+							player.getEnemy().setHp((int)(player.getEnemy().getHp()-(15*player.isEffective(player.getPersona().getAttackTypes()[pSel], player.getEnemy().getType()))*Math.pow(1.05, player.getLevel())));
 						else if(pSel == 2)
 							player.setGuarding(true);
 						

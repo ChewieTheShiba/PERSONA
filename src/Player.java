@@ -39,7 +39,7 @@ public class Player
 		this.y = y;
 		this.hitbox = new Rectangle(x, y, 28, 54);
 		sprite = new ImageIcon("assets/player/faceRight.png");
-		persona = new Persona(new ImageIcon("assets/Personas/Izanagi.png"), new int[]{13, 15, 17, 100}, new String[]{"Bash", "Cleave", "Agi", "Bufu"}, new String[]{"Phys", "Phys", "Fire", "Ice"}, "Electric");
+		persona = new Persona(new ImageIcon("assets/Personas/Izanagi No Okami Piccaro.png"), new int[]{13, 15, 17, 19}, new String[]{"Bash", "Cleave", "Agi", "Bufu"}, new String[]{"Phys", "Phys", "Fire", "Ice"}, "Electric");
 	}
 	
 	public void drawPlayer(JPanel panel, Graphics2D g)
