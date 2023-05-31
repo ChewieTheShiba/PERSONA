@@ -555,20 +555,6 @@ public class PersonaPanel extends JPanel
 		player.setWalkingLeft(false);
 		player.setWalkingUp(false);
 		player.setWalkingDown(false);
-		hp = 100;
-		maxHP = 100;
-		sp = 50;
-		isPlayerTurn = true;
-		level = 1;
-		xp = 0;
-		isFighting = false;
-		isEnemyTurn = false;
-		isDead = false;
-		isGuarding = false;
-		isInMenu = false;
-		this.y = y;
-		this.hitbox = new Rectangle(x, y, 28, 54);
-		sprite = new ImageIcon("assets/player/faceRight.png");
 	}
 	
 	
