@@ -27,9 +27,9 @@ public class PersonaPanel extends JPanel
 	public Graphics2D g;
 	private Player player;
 	private ImageIcon bg;
-	private final Shadow SLIME, ANGEL;
+	private final Shadow SLIME, ANGEL, JACK;
 	private ArrayList<Shadow> shadows;
-	private boolean personaSelected, won;
+	private boolean personaSelected, won, saveData, loadData, inTitleScreen;
 	
 	// sets up the initial panel for drawing with proper size
 	public PersonaPanel(int w, int h)
@@ -48,7 +48,8 @@ public class PersonaPanel extends JPanel
 		panel = new JPanel();
 		panel.setPreferredSize(new Dimension(0,0));
 		SLIME = new Shadow(new ImageIcon("assets/shadows/Slime;Right.png"), 1000, 500, 50, 33, new int[]{10, 11, 12, 13}, new String[]{"Headbutt", "Agi", "Zio", "Lunge"}, new String[]{"Phys", "Fire", "Electric", "Phys"}, 100, "Phys", 1);
-		ANGEL = new Shadow(new ImageIcon("assets/shadows/Angel;Right.png"), 1000, 500, 50, 68, new int[]{12, 13, 15, 17}, new String[]{"Assualt Dive", "Bufu", "Inferno", "Sword Dance"}, new String[]{"Phys", "Ice", "Fire", "Phys"}, 105, "Electric", 1);
+		ANGEL = new Shadow(new ImageIcon("assets/shadows/Angel;Right.png"), 1000, 500, 50, 68, new int[]{12, 13, 15, 17}, new String[]{"Assualt Dive", "Bufu", "Inferno", "Sword Dance"}, new String[]{"Phys", "Ice", "Fire", "Phys"}, 104, "Electric", 1);
+		JACK = new Shadow(new ImageIcon("assets/shadows/Jack o' Lantern;Right.png"), 1000, 500, 50, 56, new int[]{14, 13, 17, 22}, new String[]{"Brave Blade", "Agi", "Zio", "Agidyne"}, new String[]{"Phys", "Fire", "Electric", "Fire"}, 106, "Fire", 1);
 		shadows = new ArrayList<Shadow>();
 		loadShadows();
 		personaSelected = false;
@@ -56,8 +57,9 @@ public class PersonaPanel extends JPanel
 		gxp = 0;
 		won = false;
 		sDamage = 0;
-		player.setY(7700);
-		player.setX(7700);
+		saveData = false;
+		loadData = false;
+		titleScreen = false;
 		
 		this.add(panel);
 		this.addKeyListener(new KeyListen());
@@ -106,6 +108,13 @@ public class PersonaPanel extends JPanel
 				g.drawString("" + player.getLevel(), 405, 960);
 				g.drawString("" + gxp, 720, 395);
 				
+			}
+			else if(player.isDead())
+			{
+				ImageIcon gOver = new ImageIcon("assets/GameOver.png");
+				ImageIcon selectT = new ImageIcon("assets/fight/menuSelectTriangle.png");
+				gOver.paintIcon(panel, g, 0, 0);
+				selectT.paintIcon(panel, g, 1075, 830+pSel*65);
 			}
 			else if(player.isPlayerTurn())
 			{
@@ -183,9 +192,9 @@ public class PersonaPanel extends JPanel
 			if(player.isInMenu())
 			{
 				ImageIcon menu = new ImageIcon("assets/menuScreen.png");
-				ImageIcon selectTriangle = new ImageIcon("assets/fight/selectTriangle.png");
+				ImageIcon selectTriangle = new ImageIcon("assets/fight/menuSelectTriangle.png");
 				menu.paintIcon(panel, g, 0, 0);
-				//selectTriangle.paintIcon(panel, g, gxp, gxp);
+				selectTriangle.paintIcon(panel, g, 1700, 315 + (pSel*100));
 			}
 		}
 		
@@ -245,10 +254,13 @@ public class PersonaPanel extends JPanel
 							}
 						}
 					}
-					if(!((int)(Math.random() * 3) == 0))
+					int g = (int)(Math.random() * 3);
+					if(g == 0)
 						shadows.add(SLIME.copy(x, y, player));
-					else
+					else if (g == 1)
 						shadows.add(ANGEL.copy(x, y, player));
+					else if (g == 2)
+						shadows.add(JACK.copy(x, y, player));
 				}
 			}
 		}
@@ -277,17 +289,37 @@ public class PersonaPanel extends JPanel
 					won = false;
 				}
 			}
+			else if(player.isDead())
+			{
+				switch(e.getKeyCode())
+				{
+					case KeyEvent.VK_W:
+						if(pSel == 0);
+						else pSel--;
+						break;
+					case KeyEvent.VK_S:
+						if(pSel == 2);
+						else pSel++;
+						break;
+					case KeyEvent.VK_SPACE:
+						if(pSel == 0)
+							loadData = true;
+						else if(pSel == 1);
+						else if(pSel == 2);
+						
+				}
+			}
 			else if(player.isInMenu())
 			{
 				switch(e.getKeyCode()) 
 				{
 					case KeyEvent.VK_W:
 						if(pSel == 0);
-						else pSel++;
+						else pSel--;
 						break;
 					case KeyEvent.VK_S:
-						if(pSel == 3);
-						else pSel--;
+						if(pSel == 2);
+						else pSel++;
 						break;
 					case KeyEvent.VK_F:
 						player.setInMenu(false);
@@ -295,9 +327,11 @@ public class PersonaPanel extends JPanel
 						battleTimer.stop();
 						break;
 					case KeyEvent.VK_SPACE:
-						if(pSel == 1);
+						if(pSel == 0)
+							saveData = true;
+						else if(pSel == 1)
+							loadData = true;
 						else if(pSel == 2);
-						else if(pSel == 3);
 				}				
 			}
 			else if(!player.isFighting())
@@ -401,6 +435,7 @@ public class PersonaPanel extends JPanel
 						if(player.getHp() <= 0)
 						{
 							player.setDead(true);
+							pSel = 0;
 							player.setFighting(false);
 							timer.start();
 							battleTimer.stop();
@@ -443,14 +478,50 @@ public class PersonaPanel extends JPanel
 		{
 			Object source = e.getSource();
 			
+			if(saveData)
+			{
+				try 
+				{
+					File file = new File("save.txt");
+					FileWriter writer = new FileWriter("save.txt");
+					writer.write("" + player.getLevel() + "," + player.getXp() + "," + player.getMaxHP());
+					writer.close();
+					saveData = false;
+				}
+				catch(Exception t)
+				{
+					System.out.println(t);
+				}
+				
+			}
+			if(loadData)
+			{
+				reset();
+				try
+				{
+					Scanner scan = new Scanner(new File("save.txt"));
+					scan.useDelimiter(",");
+					reset();
+					player.setLevel(Integer.parseInt(scan.next()));
+					player.setXp(Integer.parseInt(scan.next()));
+					player.setMaxHP(Integer.parseInt(scan.next()));
+				}
+				catch(Exception t)
+				{
+					System.out.println(t);
+				}
+				
+				battleTimer.stop();
+				timer.start();
+				loadData = false;
+			}
+			
 			if(source.equals(timer) && !player.isFighting())
 			{
 				update();
 			}
 			else 
-			{
 				repaint();
-			}
 			
 		}
 
@@ -549,19 +620,10 @@ public class PersonaPanel extends JPanel
 	
 	public void reset()
 	{
-		player.setX(960);
-		player.setY(540);
-		player.setDead(false);
-		player.setLevel(1);
-		player.setXp(0);
-		player.setGuarding(false);
-		player.setDead(false);
-		player.setMaxHP(100);
-		player.setInMenu(false);
-		player.setWalkingRight(false);
-		player.setWalkingLeft(false);
-		player.setWalkingUp(false);
-		player.setWalkingDown(false);
+		player = new Player(960, 540);
+		shadows.clear();
+		loadMap();
+		loadShadows();
 	}
 	
 	

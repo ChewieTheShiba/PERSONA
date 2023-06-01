@@ -327,7 +327,6 @@ public class Player
 	public void addXp(int xp)
 	{
 		this.xp += xp;
-		System.out.println(this.xp);
 		while(this.xp > level * 20)
 		{
 			this.xp -= level * 20;
