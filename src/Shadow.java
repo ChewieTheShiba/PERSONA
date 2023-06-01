@@ -56,7 +56,7 @@ public class Shadow
 	
 	public Shadow copy(int x, int y, Player p)
 	{
-		int l = p.getLevel()+((int)(Math.random()) * 6 - 3);
+		int l = p.getLevel()+((int)(Math.random()* 6 - 3));
 		if(l < 1)
 			l = 1;
 		int hp = (int)(100 * Math.pow(1.05, l));

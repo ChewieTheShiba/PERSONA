@@ -56,6 +56,8 @@ public class PersonaPanel extends JPanel
 		gxp = 0;
 		won = false;
 		sDamage = 0;
+		player.setY(7700);
+		player.setX(7700);
 		
 		this.add(panel);
 		this.addKeyListener(new KeyListen());
@@ -215,7 +217,7 @@ public class PersonaPanel extends JPanel
 		for(int x = 1; x < 9; x++)
 			map[x][0] = new Room(0, x*32*25).loadRoom("assets/siderooms/left/room" + ((int)(Math.random()*5 + 1)) + ".txt");
 		for(int x = 1; x < 9; x++)
-			map[9][x] = new Room(8000-32*25, x*32*25).loadRoom("assets/siderooms/right/room" + ((int)(Math.random()*5 + 1)) + ".txt");
+			map[x][9] = new Room(8000-32*25, x*32*25).loadRoom("assets/siderooms/right/room" + ((int)(Math.random()*5 + 1)) + ".txt");
 	}
 	
 	public void loadShadows()
