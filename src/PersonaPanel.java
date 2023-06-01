@@ -46,6 +46,7 @@ public class PersonaPanel extends JPanel
 		battleTimer = new Timer(20, new ActionListen());
 		timer.start();
 		panel = new JPanel();
+		panel.setPreferredSize(new Dimension(0,0));
 		SLIME = new Shadow(new ImageIcon("assets/shadows/Slime;Right.png"), 1000, 500, 50, 33, new int[]{10, 11, 12, 13}, new String[]{"Headbutt", "Agi", "Zio", "Lunge"}, new String[]{"Phys", "Fire", "Electric", "Phys"}, 100, "Phys", 1);
 		ANGEL = new Shadow(new ImageIcon("assets/shadows/Angel;Right.png"), 1000, 500, 50, 68, new int[]{12, 13, 15, 17}, new String[]{"Assualt Dive", "Bufu", "Inferno", "Sword Dance"}, new String[]{"Phys", "Ice", "Fire", "Phys"}, 105, "Electric", 1);
 		shadows = new ArrayList<Shadow>();
@@ -288,6 +289,8 @@ public class PersonaPanel extends JPanel
 						break;
 					case KeyEvent.VK_F:
 						player.setInMenu(false);
+						timer.start();
+						battleTimer.stop();
 						break;
 					case KeyEvent.VK_SPACE:
 						if(pSel == 1);
@@ -313,6 +316,8 @@ public class PersonaPanel extends JPanel
 						break;
 					case KeyEvent.VK_F:
 						player.setInMenu(true);
+						timer.stop();
+						battleTimer.start();
 						pSel = 0;
 						break;
 				}
