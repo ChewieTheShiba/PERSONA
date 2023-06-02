@@ -32,6 +32,8 @@ public class PersonaPanel extends JPanel
 		inTitleScreen = true;
 		bg = new ImageIcon("assets/bg.gif");
 		
+		System.out.println("hi");
+		
 		this.setPreferredSize(new Dimension(w, h));
 		map = new Room[10][10];
 		
