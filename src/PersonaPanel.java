@@ -2,16 +2,9 @@
 //all imports are necessary
 import java.awt.*;
 import java.awt.event.*;
-
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.util.*;
 import javax.swing.Timer;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.*;
-import java.time.*;
-import java.time.format.DateTimeFormatter;
 import java.io.*;
 
 //must 'extend' JPanel 
@@ -20,7 +13,7 @@ public class PersonaPanel extends JPanel
 {
 	// variables for the overall width and height
 	private int w, h, pSel, sDamage, gxp;
-	private Timer timer, battleTimer;
+	private Timer timer, battleTimer, startTimer;
 	private Room[][] map;
 	private ArrayList<Room> loadedRooms;
 	public JPanel panel;
@@ -36,22 +29,25 @@ public class PersonaPanel extends JPanel
 	{
 		this.w = w;
 		this.h = h;
+		inTitleScreen = true;
 		bg = new ImageIcon("assets/bg.gif");
+		
 		this.setPreferredSize(new Dimension(w, h));
 		map = new Room[10][10];
-		loadMap();
+		
 		loadedRooms = new ArrayList<Room>();
 		player = new Player(w/2, h/2);
 		timer = new Timer(20, new ActionListen());
-		battleTimer = new Timer(20, new ActionListen());
-		timer.start();
+		battleTimer = new Timer(20, new ActionListen());	
+		startTimer = new Timer(20, new ActionListen());
+		startTimer.start();
 		panel = new JPanel();
 		panel.setPreferredSize(new Dimension(0,0));
 		SLIME = new Shadow(new ImageIcon("assets/shadows/Slime;Right.png"), 1000, 500, 50, 33, new int[]{10, 11, 12, 13}, new String[]{"Headbutt", "Agi", "Zio", "Lunge"}, new String[]{"Phys", "Fire", "Electric", "Phys"}, 100, "Phys", 1);
 		ANGEL = new Shadow(new ImageIcon("assets/shadows/Angel;Right.png"), 1000, 500, 50, 68, new int[]{12, 13, 15, 17}, new String[]{"Assualt Dive", "Bufu", "Inferno", "Sword Dance"}, new String[]{"Phys", "Ice", "Fire", "Phys"}, 104, "Electric", 1);
 		JACK = new Shadow(new ImageIcon("assets/shadows/Jack o' Lantern;Right.png"), 1000, 500, 50, 56, new int[]{14, 13, 17, 22}, new String[]{"Brave Blade", "Agi", "Zio", "Agidyne"}, new String[]{"Phys", "Fire", "Electric", "Fire"}, 106, "Fire", 1);
 		shadows = new ArrayList<Shadow>();
-		loadShadows();
+	
 		personaSelected = false;
 		pSel = 0;
 		gxp = 0;
@@ -73,7 +69,15 @@ public class PersonaPanel extends JPanel
 		super.paintComponent(tg);
 		g = (Graphics2D) tg;
 		
-		if(player.isFighting())
+		System.out.println(inTitleScreen);
+		
+		if(inTitleScreen)
+		{
+			System.out.println("hi");
+			new ImageIcon("assets/StartUp.png").paintIcon(panel, g, 0, 0);
+			new ImageIcon("assets/fight/selectTriangle.png").paintIcon(panel, g, 1000, 900 + pSel*100);
+		}
+		else if(player.isFighting())
 		{
 			timer.stop();
 			battleTimer.start();
@@ -107,11 +111,9 @@ public class PersonaPanel extends JPanel
 				g.setFont(new Font("Arial", Font.BOLD, 80));
 				g.drawString("" + player.getLevel(), 405, 960);
 				g.drawString("" + gxp, 720, 395);
-				
 			}
 			else if(player.isDead())
 			{
-				
 				ImageIcon gOver = new ImageIcon("assets/GameOver.png");
 				ImageIcon selectT = new ImageIcon("assets/fight/menuSelectTriangle.png");
 				gOver.paintIcon(panel, g, 0, 0);
@@ -278,7 +280,36 @@ public class PersonaPanel extends JPanel
 
 		public void keyPressed(KeyEvent e)
 		{
-			if(won)
+			if(inTitleScreen)
+			{
+				switch(e.getKeyCode())
+				{
+					case KeyEvent.VK_W:
+						if(pSel == 0);
+						else pSel--;
+						break;
+					case KeyEvent.VK_S:
+						if(pSel == 2);
+						else pSel++;
+						break;
+					case KeyEvent.VK_SPACE:
+						if(pSel == 0)
+						{
+							loadMap();
+							loadShadows();
+							timer.start();
+							startTimer.stop();
+						}
+						else if(pSel == 1)
+						{
+							loadData = true;
+							startTimer.stop();
+						}
+						else if(pSel == 2)
+							SwingUtilities.getWindowAncestor(PersonaPanel.this).dispose();
+				}
+			}
+			else if(won)
 			{
 				//System.out.println("hi");
 				if(e.getKeyCode() == KeyEvent.VK_SPACE)
@@ -305,7 +336,8 @@ public class PersonaPanel extends JPanel
 					case KeyEvent.VK_SPACE:
 						if(pSel == 0)
 							loadData = true;
-						else if(pSel == 1);
+						else if(pSel == 1)
+							inTitleScreen = true;
 						else if(pSel == 2)
 							SwingUtilities.getWindowAncestor(PersonaPanel.this).dispose();
 						
@@ -333,7 +365,8 @@ public class PersonaPanel extends JPanel
 							saveData = true;
 						else if(pSel == 1)
 							loadData = true;
-						else if(pSel == 2);
+						else if(pSel == 2)
+							inTitleScreen = true;
 				}				
 			}
 			else if(!player.isFighting())
