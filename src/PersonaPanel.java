@@ -59,7 +59,7 @@ public class PersonaPanel extends JPanel
 		sDamage = 0;
 		saveData = false;
 		loadData = false;
-		titleScreen = false;
+		//titleScreen = false;
 		
 		this.add(panel);
 		this.addKeyListener(new KeyListen());
@@ -111,6 +111,7 @@ public class PersonaPanel extends JPanel
 			}
 			else if(player.isDead())
 			{
+				
 				ImageIcon gOver = new ImageIcon("assets/GameOver.png");
 				ImageIcon selectT = new ImageIcon("assets/fight/menuSelectTriangle.png");
 				gOver.paintIcon(panel, g, 0, 0);
@@ -305,7 +306,8 @@ public class PersonaPanel extends JPanel
 						if(pSel == 0)
 							loadData = true;
 						else if(pSel == 1);
-						else if(pSel == 2);
+						else if(pSel == 2)
+							SwingUtilities.getWindowAncestor(PersonaPanel.this).dispose();
 						
 				}
 			}
@@ -430,16 +432,14 @@ public class PersonaPanel extends JPanel
 				}
 				else
 				{
+					if(player.getHp() <= 0)
+					{
+						player.setHp(0);
+						player.setDead(true);
+						pSel = 0;
+					}
 					if(e.getKeyCode() == KeyEvent.VK_SPACE)
 					{
-						if(player.getHp() <= 0)
-						{
-							player.setDead(true);
-							pSel = 0;
-							player.setFighting(false);
-							timer.start();
-							battleTimer.stop();
-						}
 						player.setPlayerTurn(true);
 						player.setEnemyTurn(false);
 					}
@@ -517,12 +517,9 @@ public class PersonaPanel extends JPanel
 			}
 			
 			if(source.equals(timer) && !player.isFighting())
-			{
 				update();
-			}
-			else 
+			else if(source.equals(battleTimer))
 				repaint();
-			
 		}
 
 	}
